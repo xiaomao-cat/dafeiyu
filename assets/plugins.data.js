@@ -1,0 +1,293 @@
+/* ============================================================
+   大肥鱼合集 · 插件与技能数据源（纯数据，只放数据）
+   ------------------------------------------------------------
+   ★ 加一条只要四个字段：url / name / tagline / category
+     其余（id、pkg、宿主、链接区、图标、排序）全部自动推导。
+
+   ★ 星数、下载量、许可、作者这些活数据不用手填，
+     跑 `node tools/sync-stats.mjs` 自动抓进 assets/stats.js。
+     加插件也可以一步到位：
+     node tools/add-plugin.mjs <url> <名称> <一句话说明> <分类> [安装命令]
+
+   数组里越靠前 = 排在目录越前面；最后一条自动带「最新」角标。
+   ============================================================ */
+
+window.DAFEIYU_PLUGINS = [
+  {
+    url: "https://github.com/PC2005-cloud/dsh-pet",
+    name: "大肥鱼桌宠",
+    tagline: "一百余个透明动画的桌宠，赖在 Harness 里不走了",
+    category: "桌宠",
+    host: "dsh",
+    install: "dsh plugin --profile web add dsh-pet",
+    note: "桌面版请在应用内的插件管理页填 dsh-pet 安装。",
+    media: "assets/dafeiyu-cube.webp",
+    mediaType: "animation",
+    features: [
+      "一百余个透明动画，待机、魔方、火锅、瞌睡随时切换",
+      "跟随 DSH 会话事件换工作状态，按档位播放余额动画",
+      "能脱离浏览器住进桌面，透明置顶小窗常驻",
+      "自带素材生成链，可以用 AI 视频自造专属宠物",
+    ],
+    extra: [
+      { label: "npm 包", url: "https://www.npmjs.com/package/dsh-pet" },
+    ],
+  },
+  {
+    url: "https://github.com/MeteorNOX/DeepSeek-Balance-Whale-Widget",
+    name: "小鲸鱼记账挂件",
+    tagline: "住在界面右下角，替你把余额和每轮消耗算清楚",
+    category: "挂件",
+    host: "dsh",
+    install: "dsh plugin --profile web add dsh-whale-widget",
+    note: "桌面版要在应用内安装，命令行按设计拒绝碰 desktop profile。npm 与 github: 两种装法二选一，混装会冲突。",
+    media: "assets/whale-character.webp",
+    mediaType: "image",
+    features: [
+      "常驻 DSH 界面右下角，余额每 60 秒自动刷新",
+      "今日已用按余额下降累计，每轮消耗按真实 token 换算",
+      "工作日峰谷定价，2026 年 8 月起周末全天谷价",
+      "泡泡内容完全自定义，点击序列、并列加权出泡都行",
+    ],
+    extra: [
+      { label: "npm 包", url: "https://www.npmjs.com/package/dsh-whale-widget" },
+    ],
+  },
+  {
+    url: "https://github.com/T7moris/GPT-Niang",
+    name: "GPT娘额度挂件",
+    tagline: "陪你看 Codex 额度，点角色看数字，点气泡看语录",
+    category: "挂件",
+    host: "codex",
+    license: "代码 MIT",
+    installKind: "link",
+    note: "这一款跑在 Codex 桌面端，不是 DSH 插件。需要 Node.js 20 以上和已登录的 Codex；Windows 解压后运行 安装GPT娘.cmd，macOS 打开 GPTNiangMac.app。",
+    warning: "龙娘角色图不随 MIT 授权，仅限本项目及非商业副本展示，商用需另行取得授权。",
+    media: "assets/dragon.webp",
+    mediaType: "image",
+    features: [
+      "点角色看额度，点气泡看语录，按压有回弹",
+      "自动识别套餐和额度窗口，切换套餐后重新认一次",
+      "拖动缩放、边缘吸附、跟随 Codex 主窗口",
+      "只读额度接口，不创建聊天也不调用模型",
+    ],
+    extra: [
+      { label: "下载安装包", url: "https://github.com/T7moris/GPT-Niang/releases/latest" },
+    ],
+  },
+  {
+    url: "https://github.com/obra/superpowers",
+    name: "Superpowers",
+    tagline: "一套 Agent 技能框架与开发方法论，装上就像有了规矩",
+    category: "工作流",
+    installKind: "prompt",
+    install: "/plugin install superpowers@claude-plugins-official",
+    note: "这条是在 Claude Code 里输入的。Codex 应用和 Codex CLI 从官方插件市场装，OpenCode、Droid、Copilot CLI 各有一条，README 里是全表。",
+    features: [
+      "成体系的 Agent 技能框架，不只是零散提示词",
+      "把开发方法论固化成技能，写代码有稳定套路",
+      "Claude Code / Codex / OpenCode / Droid 等多宿主都发过版",
+      "仓库长期在更，方法论跟着一起迭代",
+    ],
+  },
+  {
+    url: "https://github.com/JuliusBrussee/caveman",
+    name: "caveman",
+    tagline: "让 Agent 像原始人一样说话，省 token 也省废话",
+    category: "工作流",
+    install: "npx @caveman-ai/cli@latest",
+    note: "一条命令装完就生效，claude、Codex、Gemini CLI、OpenCode 等三十多个 Agent 都能用，README 里有全表。",
+    features: [
+      "把输出改成短句少废话，作者实测能砍掉 65% token",
+      "自带的代理在本地跑，用你自己的 key 和登录态",
+      "三十多个 Agent 通吃，装一个全家能用",
+      "想关掉也简单，它有开关",
+    ],
+  },
+  {
+    url: "https://github.com/ayghri/i-have-adhd",
+    name: "i-have-adhd",
+    tagline: "治 Agent 啰嗦的：别再把答案埋在废话堆里",
+    category: "效率",
+    installKind: "prompt",
+    install: "claude plugin marketplace add ayghri/i-have-adhd\nclaude plugin install i-have-adhd@i-have-adhd",
+    note: "这两条在 Claude Code 里跑。Codex 那边是 codex plugin marketplace add ayghri/i-have-adhd --ref main 加 codex plugin add i-have-adhd@i-have-adhd。",
+    features: [
+      "专门治「答案埋在正文里」这个毛病",
+      "先给结论，再给细节，读起来不费劲",
+      "作者说这是 ADHD 友好的输出方式",
+      "Claude Code 与 Codex 都有插件版",
+    ],
+  },
+  {
+    url: "https://github.com/mvanhorn/last30days-skill",
+    name: "last30days",
+    tagline: "把这 30 天的事查清楚：Reddit、X、YouTube、HN 一起翻",
+    category: "搜索",
+    install: "npx skills add mvanhorn/last30days-skill -g",
+    note: "加 -g 是全局装，所有项目都能用；去掉就只装当前项目。也可以用 /plugin install last30days。",
+    features: [
+      "跨 Reddit、X、YouTube、HN、Polymarket 和全网检索",
+      "只取最近 30 天的内容，然后合成一份有出处的摘要",
+      "arXiv 和 Techmeme 会自动接上，不用单独订阅",
+      "大多数来源不用 API Key",
+    ],
+  },
+  {
+    url: "https://github.com/kepano/obsidian-skills",
+    name: "Obsidian Skills",
+    tagline: "让 Agent 学会用 Obsidian CLI 和那几种开放格式",
+    category: "笔记",
+    install: "npx skills add https://github.com/kepano/obsidian-skills",
+    note: "也可以用 /plugin install obsidian@obsidian-skills。作者就是 Obsidian 的作者 kepano。",
+    features: [
+      "教 Agent 用 Obsidian CLI 操作你的库",
+      "覆盖 Markdown、Bases、JSON Canvas 这些开放格式",
+      "不只是读，能建能改",
+      "作者本人维护，跟着 Obsidian 一起更新",
+    ],
+  },
+  {
+    url: "https://github.com/emilkowalski/skills",
+    name: "emilkowalski 的 skills",
+    tagline: "给设计师和工程师的技能包，帮你选对库而不是硬凑",
+    category: "设计",
+    install: "npx skills@latest add emilkowalski/skills",
+    note: "作者是 Svelte 的作者 Emil Kowalski。这套技能偏界面实现和工程选型。",
+    features: [
+      "帮 Agent 挑库：按任务选作者真正在用的那一个",
+      "不用 AI 硬搓一个没人维护的组件库",
+      "偏界面实现这一侧，设计师和工程师都能用",
+      "仓库长期在更",
+    ],
+  },
+  {
+    url: "https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep",
+    name: "ARIS 自主研究",
+    tagline: "睡觉时自己跑研究循环，醒了给你一叠能用的结论",
+    category: "科研",
+    install: "git clone https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep.git\nbash Auto-claude-code-research-in-sleep/tools/install_aris.sh ~/your-project",
+    note: "想全局装就把 skills/ 整个拷到 ~/.claude/skills/。它另有一条 dsh-aris 分支，能装成 DeepSeek Harness 插件。",
+    warning: "GitHub 上 Zyan0012/ARIS 是这个仓库的 fork，只有 40 个 Star，认准 wanshuiyin 这个原仓库。",
+    features: [
+      "纯 Markdown 技能，不绑任何框架",
+      "跨模型互审循环，帮你挑出真正值得做的点子",
+      "实验自动化：把想法推到能跑出结果",
+      "Claude Code / Codex / Cursor / OpenClaw / DeepSeek Harness 都能用",
+    ],
+    extra: [
+      { label: "DSH 插件分支", url: "https://github.com/wanshuiyin/Auto-claude-code-research-in-sleep/tree/dsh-aris" },
+    ],
+  },
+  {
+    url: "https://github.com/Yuan1z0825/nature-skills",
+    name: "nature 论文转 PPT",
+    tagline: "按 Nature 的学术表达，把论文变成讲得清的 PPT",
+    category: "论文",
+    install: "npx skills add Yuan1z0825/nature-skills --global --agent codex --skill nature-paper2ppt --skill nature-shared --yes --copy",
+    note: "需要 Node.js 18 以上。nature-paper2ppt 要带上共享依赖 nature-shared，否则缺件。装到 Claude Code 就把 --agent codex 换成 --agent claude。",
+    features: [
+      "仓库里二十多个科研技能，论文转 PPT 只是其中一个",
+      "同仓库还有绘图、润色、引用核验、统计、作卡等",
+      "论文排版按 Nature 的学术表达走",
+      "Claude Code / Codex / OpenClaw 都能装",
+    ],
+    extra: [
+      { label: "技能目录", url: "https://github.com/Yuan1z0825/nature-skills/tree/main/skills/nature-paper2ppt" },
+    ],
+  },
+  {
+    url: "https://skillhub.cn/skills/clawhub_paudyyin/summarize",
+    name: "Summarize 摘要",
+    tagline: "长文、文档、网页丢进去，自动出摘要和关键词",
+    category: "摘要",
+    installKind: "link",
+    note: "技能市场页点「下载 Zip 包安装」，解压后按包内说明放进你的技能目录。这是一款从 ClawHub 上架的技能，原始页也在下面链接里。",
+    features: [
+      "长文本、文档、网页都能直接摘要",
+      "自动提取要点与关键词",
+      "摘要长度可自定义",
+      "归类是信息检索、摘要总结、文档问答",
+    ],
+    extra: [
+      { label: "ClawHub 原页", url: "https://clawhub.ai/paudyyin/skills/summarize" },
+    ],
+  },
+  {
+    url: "https://skillhub.cn/skills/user_bddf3fe6/contextweave-interactive-architecture",
+    name: "架构图一键生成",
+    tagline: "从代码或一句话里抽出结构，产出能接着改的架构图",
+    category: "架构图",
+    installKind: "link",
+    note: "技能市场页点「下载 Zip 包安装」，解压后按包内说明放进你的技能目录。上架名叫「架构图一键生成」，在市场里搜 contextweave 搜不到，直接按链接进。",
+    features: [
+      "架构图、流程图、思维导图、复杂信息图都能出",
+      "从代码、文件或自然语言里提取结构与关系",
+      "导出 CW / SVG / HTML / 可编辑 PPTX / 原生 VSDX",
+      "PPTX 与 Visio 用原生形状和连接器，不是截图",
+    ],
+  },
+  {
+    url: "https://skillhub.cn/skills/user_5b28ea14/smart-charts",
+    name: "smart-charts 图表",
+    tagline: "拖个 CSV 进去，32 种交互式图表直接出来",
+    category: "图表",
+    installKind: "link",
+    note: "技能市场页点「下载 Zip 包安装」，解压后按包内说明放进你的技能目录。归类是数据可视化。",
+    features: [
+      "32 种图表，3 套主题",
+      "CSV / Excel / JSON 拖进对话框就出图",
+      "结果是可交互的 HTML",
+      "图表可以保存成图片",
+    ],
+  },
+  {
+    url: "https://skillhub.cn/skills/zcwl/multi-search-engine",
+    name: "multi-search-engine 搜索引擎",
+    tagline: "16 个引擎一起搜，去重加交叉验证，不用 API Key",
+    category: "搜索",
+    installKind: "link",
+    note: "技能市场页点「下载 Zip 包安装」，解压后按包内说明放进你的技能目录。内置的检索脚本零依赖，不需要 API Key。",
+    features: [
+      "16 个搜索引擎：7 个国内直连 + 9 个国际",
+      "跨引擎检索后去重，多源交叉验证",
+      "不需要 API Key，内置零依赖 Python 脚本",
+      "输出带来源链接和可信度标注的结构化结果",
+    ],
+  },
+  {
+    url: "https://skillhub.cn/skills/indiv-ebandao/anti-fraud",
+    name: "防骗大师",
+    tagline: "贴段短信或聊天记录，它当场告诉你是不是骗局",
+    category: "安全",
+    installKind: "link",
+    note: "技能市场页点「下载 Zip 包安装」，解压后按包内说明放进你的技能目录。归类是消费决策、家庭助手。",
+    features: [
+      "短信、聊天记录、邮件、链接、电话转述都能贴进去判",
+      "出现转账、验证码、屏幕共享就主动提醒",
+      "覆盖刷单返利、杀猪盘、冒充公检法、虚假投资等套路",
+      "也能当防骗科普和话术识别的课上讲",
+    ],
+  },
+  {
+    url: "https://github.com/c1overzz/dsh-bili-scroll",
+    name: "dsh-bili-scroll 刷B站",
+    tagline: "每天替你刷一轮 B站，读字幕挑出值得的，写一份日报",
+    category: "日报",
+    install: "dsh plugin --profile web add dsh-bili-scroll",
+    host: "dsh",
+    note: "要 dsh ≥ 0.1.7-rc.1，装完必须重启一次 dsh。桌面版 0.1.3 及以前装不起来，0.1.4 起已修。机器上要有 Python 3.10+ 或 uv，两个都没有也行，点装依赖时它会自己下一份 uv。占空间约 84 MB，开本地转写约 1 GB。",
+    warning: "桌面版 DSH（NEXT / 0.2.x）上有用户反馈「自动跑那一轮」会卡住，卡住就用设置页的「现在跑一轮」手动跑，那条是稳的。",
+    features: [
+      "按关键词搜近几天的视频",
+      "逐条读字幕原文再判断",
+      "Markdown 日报写到 out/<日期>.md",
+      "特别值得的会发评论 @ 你",
+      "能在 DeepSeek 优惠时段自动跑省 token",
+    ],
+    extra: [
+      { label: "最新 Release", url: "https://github.com/c1overzz/dsh-bili-scroll/releases/latest" },
+      { label: "npm 包", url: "https://www.npmjs.com/package/dsh-bili-scroll" },
+    ],
+  },
+];
