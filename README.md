@@ -117,13 +117,37 @@ python3 -m http.server 8899 --bind 127.0.0.1
 
 ## 三、上线部署
 
-整个 `dafeiyu-site` 目录就是成品，扔到任意静态托管上即可（Vercel / Netlify / GitHub Pages / 对象存储都行）。
-没有构建步骤，不需要 Node 环境。
+线上地址：**https://xiaomao-cat.github.io/dafeiyu/**
 
-上线前把 `index.html` 里的两处占位改掉：
+站点托管在 GitHub Pages 上，`dafeiyu-site/` 本身就是那个仓库（分支 `main`，根目录直出）。
+没有构建步骤，不需要 Node 环境，push 完 GitHub 自动构建，一般十几秒上线。
 
-- `<link rel="canonical" href="https://example.com/dafeiyu/">` 换成真实地址
-- `og:image` 换成真实域名下的图片地址（社交分享卡片要用绝对路径）
+### 日常更新：一条命令
+
+```bash
+node tools/publish.mjs
+```
+
+它会依次做四件事：刷新活数据（星数 / 下载量 / 许可）→ 重建图标子集 → 整理数据格式 →
+`git commit && push` → 等 GitHub Pages 构建完并打印线上地址。
+
+只想推当前内容、不想重新抓数（网络不稳时）：
+
+```bash
+node tools/publish.mjs --skip-stats
+```
+
+推的时候顺便写清楚改了什么：
+
+```bash
+node tools/publish.mjs --skip-stats --message="新增：xxx 插件"
+```
+
+### 想换个托管也行
+
+整个 `dafeiyu-site` 目录就是成品，扔到 Vercel / Netlify / 对象存储都能跑。
+只有一处要记得改：换了域名就把 `index.html` 里的 `canonical`、`og:url`、
+`og:image`、`twitter:image` 四个地址一起换掉（社交分享卡片必须用绝对路径）。
 
 ---
 
@@ -151,6 +175,7 @@ dafeiyu-site/
 │   └── *.webp              产品展示图
 └── tools/
     ├── add-plugin.mjs      一条命令加插件
+    ├── publish.mjs         一键发布到 GitHub Pages（抓数 + 提交 + 推送 + 等构建）
     ├── sync-stats.mjs      刷新星数、下载量等活数据
     ├── sync-icons.mjs      重新生成图标子集
     ├── format-data.mjs     整理数据文件格式
