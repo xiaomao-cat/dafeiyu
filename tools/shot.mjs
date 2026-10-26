@@ -30,7 +30,15 @@ function send(method, params = {}) {
   });
 }
 async function evaluate(expression) {
-  const r = await send("Runtime.evaluate", { expression: `(function(){ ${expression} })()`, returnByValue: true, awaitPromise: true });
+  // 调用方有两种写法：
+  //   "return document.title"  —— 语句式
+  //   "(async () => { await x })()" —— 表达式式（要等它完成）
+  // 第二种必须真的被 await，否则等待逻辑形同虚设（本地看不出来，走 CDN 就露馅）。
+  const isExpr = /\bawait\b/.test(expression);
+  const js = isExpr
+    ? `(async function(){ return (${expression}); })()`
+    : `(function(){ ${expression} })()`;
+  const r = await send("Runtime.evaluate", { expression: js, returnByValue: true, awaitPromise: true });
   if (r.exceptionDetails) throw new Error(r.exceptionDetails.exception?.description || "JS 异常");
   return r.result.value;
 }
@@ -79,9 +87,17 @@ try {
         await new Promise(r => setTimeout(r, 200));
       }
       await new Promise(r => setTimeout(r, 600));
+      // CSS 背景图不在 document.images 里，得单独 decode，否则拍到空背景
+      const hero = document.querySelector('.hero');
+      if (hero) {
+        const bi = getComputedStyle(hero).backgroundImage || '';
+        const m = bi.match(/url\\((['"]?)([^'")]+)\\1\\)/);
+        if (m) { try { const im = new Image(); im.src = m[2]; await im.decode(); } catch (e) {} }
+      }
       await Promise.all([...document.images].map(img => img.complete && img.naturalWidth
         ? Promise.resolve()
         : new Promise(r => { img.onload = img.onerror = r; setTimeout(r, 8000); })));
+      await new Promise(r => setTimeout(r, 400));
     })()
   `);
   await sleep(500);

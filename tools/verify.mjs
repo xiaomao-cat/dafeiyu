@@ -122,7 +122,20 @@ async function main() {
     await send("Network.enable");
     await send("Network.setCacheDisabled", { cacheDisabled: true });
     await send("Page.reload", { ignoreCache: true });
-    await sleep(1500);
+
+    // 等卡片真的渲染出来再开测。
+    // 本地秒开，但走 CDN（GitHub Pages）冷缓存时要好几秒，固定 sleep 会误判。
+    let rendered = 0;
+    for (let i = 0; i < 120; i++) {
+      await sleep(250);
+      try {
+        rendered = await evaluate("return document.querySelectorAll('#plugin-grid .product').length");
+      } catch {
+        rendered = 0; // reload 期间执行上下文还没建好
+      }
+      if (rendered >= 17) break;
+    }
+    await sleep(400); // 让活数据（星数 / 下载量）覆盖完
 
     console.log("\n▸ 页面加载与数据渲染");
     check("页面标题正确", (await evaluate("return document.title")).includes("大肥鱼合集"));
