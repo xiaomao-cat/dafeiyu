@@ -114,7 +114,8 @@
     "蒸馏": "ph-drop",
     "教学": "ph-chalkboard-teacher",
     "拷问": "ph-fire",
-    "发现": "ph-binoculars"
+    "发现": "ph-binoculars",
+    "上下文": "ph-gauge"
   };
   function iconFor(cat) {
     return CATEGORY_ICON[cat] || "ph-terminal-window";

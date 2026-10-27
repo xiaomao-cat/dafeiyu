@@ -10,7 +10,7 @@
 window.DAFEIYU_STATS = {
   "pc2005-cloud-dsh-pet": {
     "verifiedAt": "2026-10-27",
-    "stars": 4479,
+    "stars": 4496,
     "license": "MIT",
     "author": "PC2005-cloud",
     "repo": "PC2005-cloud/dsh-pet",
@@ -18,7 +18,7 @@ window.DAFEIYU_STATS = {
   },
   "meteornox-deepseek-balance-whale-widget": {
     "verifiedAt": "2026-10-27",
-    "stars": 6277,
+    "stars": 6290,
     "license": "MIT",
     "author": "MeteorNOX",
     "repo": "MeteorNOX/DeepSeek-Balance-Whale-Widget",
@@ -33,56 +33,56 @@ window.DAFEIYU_STATS = {
   },
   "obra-superpowers": {
     "verifiedAt": "2026-10-27",
-    "stars": 305959,
+    "stars": 306042,
     "license": "MIT",
     "author": "obra",
     "repo": "obra/superpowers"
   },
   "juliusbrussee-caveman": {
     "verifiedAt": "2026-10-27",
-    "stars": 115441,
+    "stars": 115458,
     "license": "Apache-2.0",
     "author": "JuliusBrussee",
     "repo": "JuliusBrussee/caveman"
   },
   "ayghri-i-have-adhd": {
     "verifiedAt": "2026-10-27",
-    "stars": 58988,
+    "stars": 59004,
     "license": "MIT",
     "author": "ayghri",
     "repo": "ayghri/i-have-adhd"
   },
   "mvanhorn-last30days-skill": {
     "verifiedAt": "2026-10-27",
-    "stars": 65641,
+    "stars": 65645,
     "license": "MIT",
     "author": "mvanhorn",
     "repo": "mvanhorn/last30days-skill"
   },
   "kepano-obsidian-skills": {
     "verifiedAt": "2026-10-27",
-    "stars": 50211,
+    "stars": 50218,
     "license": "MIT",
     "author": "kepano",
     "repo": "kepano/obsidian-skills"
   },
   "emilkowalski-skills": {
     "verifiedAt": "2026-10-27",
-    "stars": 50481,
+    "stars": 50507,
     "license": "MIT",
     "author": "emilkowalski",
     "repo": "emilkowalski/skills"
   },
   "wanshuiyin-auto-claude-code-research-in-sleep": {
     "verifiedAt": "2026-10-27",
-    "stars": 18154,
+    "stars": 18159,
     "license": "MIT",
     "author": "wanshuiyin",
     "repo": "wanshuiyin/Auto-claude-code-research-in-sleep"
   },
   "yuan1z0825-nature-skills": {
     "verifiedAt": "2026-10-27",
-    "stars": 50955,
+    "stars": 50972,
     "license": "Apache-2.0",
     "author": "Yuan1z0825",
     "repo": "Yuan1z0825/nature-skills"
@@ -90,36 +90,36 @@ window.DAFEIYU_STATS = {
   "clawhub-paudyyin-summarize": {
     "verifiedAt": "2026-10-27",
     "author": "paudyyin",
-    "marketDownloads": 816847,
+    "marketDownloads": 817237,
     "version": "1.0.0"
   },
   "user-bddf3fe6-contextweave-interactive-architecture": {
     "verifiedAt": "2026-10-27",
     "author": "user_bddf3fe6",
-    "marketDownloads": 408657,
+    "marketDownloads": 408904,
     "version": "1.7.1"
   },
   "user-5b28ea14-smart-charts": {
     "verifiedAt": "2026-10-27",
     "author": "user_5b28ea14",
-    "marketDownloads": 538124,
+    "marketDownloads": 538570,
     "version": "8.4.0"
   },
   "zcwl-multi-search-engine": {
     "verifiedAt": "2026-10-27",
     "author": "zcwl",
-    "marketDownloads": 9965981,
+    "marketDownloads": 9994177,
     "version": "3.0.0"
   },
   "indiv-ebandao-anti-fraud": {
     "verifiedAt": "2026-10-27",
     "author": "user_741dc82b",
-    "marketDownloads": 1404219,
+    "marketDownloads": 1426907,
     "version": "1.0.11"
   },
   "c1overzz-dsh-bili-scroll": {
     "verifiedAt": "2026-10-27",
-    "stars": 913,
+    "stars": 918,
     "license": "MIT",
     "author": "c1overzz",
     "repo": "c1overzz/dsh-bili-scroll",
@@ -134,44 +134,44 @@ window.DAFEIYU_STATS = {
   },
   "comfy-org-comfyui": {
     "verifiedAt": "2026-10-27",
-    "stars": 143476,
+    "stars": 143482,
     "license": "GPL-3.0",
     "author": "Comfy-Org",
     "repo": "Comfy-Org/ComfyUI"
   },
   "snowluma-snowluma": {
     "verifiedAt": "2026-10-27",
-    "stars": 2864,
+    "stars": 2881,
     "license": "NOASSERTION",
     "author": "SnowLuma",
     "repo": "SnowLuma/SnowLuma"
   },
   "derpyu520-qq-bridge": {
     "verifiedAt": "2026-10-27",
-    "stars": 3053,
+    "stars": 3069,
     "license": "NOASSERTION",
     "author": "Derpyu520",
     "repo": "Derpyu520/qq-bridge"
   },
   "zekainie-universal-examprep-skill-universal-exam-cram-coach": {
     "verifiedAt": "2026-10-27",
-    "stars": 353,
+    "stars": 354,
     "license": "MIT",
     "author": "ZeKaiNie",
-    "skillInstalls": 91,
+    "skillInstalls": 93,
     "repo": "ZeKaiNie/universal-examprep-skill"
   },
   "kangarooking-cangjie-skill-cangjie-skill": {
     "verifiedAt": "2026-10-27",
-    "stars": 11808,
+    "stars": 11810,
     "license": "MIT",
     "author": "kangarooking",
-    "skillInstalls": 1604,
+    "skillInstalls": 1606,
     "repo": "kangarooking/cangjie-skill"
   },
   "mattpocock-skills-teach": {
     "verifiedAt": "2026-10-27",
-    "stars": 304564,
+    "stars": 304617,
     "license": "MIT",
     "author": "mattpocock",
     "skillInstalls": 875252,
@@ -179,7 +179,7 @@ window.DAFEIYU_STATS = {
   },
   "mattpocock-skills-grill-me": {
     "verifiedAt": "2026-10-27",
-    "stars": 304564,
+    "stars": 304617,
     "license": "MIT",
     "author": "mattpocock",
     "skillInstalls": 1443866,
@@ -187,7 +187,7 @@ window.DAFEIYU_STATS = {
   },
   "virgiliojr94-book-to-skill-book-to-skill": {
     "verifiedAt": "2026-10-27",
-    "stars": 36253,
+    "stars": 36258,
     "license": "MIT",
     "author": "virgiliojr94",
     "skillInstalls": 8534,
@@ -195,10 +195,31 @@ window.DAFEIYU_STATS = {
   },
   "vercel-labs-skills-find-skills": {
     "verifiedAt": "2026-10-27",
-    "stars": 36786,
+    "stars": 36795,
     "license": "MIT",
     "author": "vercel-labs",
-    "skillInstalls": 4067889,
+    "skillInstalls": 4069739,
     "repo": "vercel-labs/skills"
+  },
+  "bowenliang123-dsh-context": {
+    "verifiedAt": "2026-10-27",
+    "stars": 3696,
+    "license": "Apache-2.0",
+    "author": "bowenliang123",
+    "repo": "bowenliang123/dsh-context",
+    "downloads": 176399
+  },
+  "clawhub-fty4-memos": {
+    "verifiedAt": "2026-10-27",
+    "author": "fty4",
+    "marketDownloads": 9524,
+    "version": "0.1.1"
+  },
+  "usememos-memos": {
+    "verifiedAt": "2026-10-27",
+    "stars": 64113,
+    "license": "MIT",
+    "author": "usememos",
+    "repo": "usememos/memos"
   }
 };

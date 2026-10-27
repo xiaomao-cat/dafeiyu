@@ -70,6 +70,9 @@
 .ph-fish:before {
   content: "\e728";
 }
+.ph-gauge:before {
+  content: "\e628";
+}
 .ph-github-logo:before {
   content: "\e576";
 }
