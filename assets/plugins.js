@@ -56,6 +56,9 @@
       stars: st.stars != null ? st.stars : (p.stars || 0),
       downloads: st.downloads != null ? st.downloads : (p.downloads || 0),
       marketDownloads: st.marketDownloads != null ? st.marketDownloads : (p.marketDownloads || 0),
+      skillInstalls: st.skillInstalls != null ? st.skillInstalls : (p.skillInstalls || 0),
+      // 星数合计要按仓库去重：同一个仓库出两个技能时只能算一次
+      statRepo: st.repo || "",
       author: p.author || st.author || authorOf(url, host),
       version: st.version || p.version || "",
       media: p.media || "",
@@ -89,8 +92,9 @@
     if (p.license) tags.push('<span class="tag tag--accent">' + esc(p.license) + "</span>");
     if (p.stars) tags.push('<span class="tag">GitHub ' + num(p.stars) + " Star</span>");
     if (p.marketDownloads) tags.push('<span class="tag">技能市场 ' + num(p.marketDownloads) + " 次下载</span>");
+    if (p.skillInstalls) tags.push('<span class="tag">skills.sh ' + num(p.skillInstalls) + " 次安装</span>");
     if (p.downloads) tags.push('<span class="tag">npm 近 30 天 ' + num(p.downloads) + " 次</span>");
-    if (!p.stars && !p.marketDownloads && !p.downloads) tags.push('<span class="tag">' + esc(hostLabel(p.host)) + "</span>");
+    if (!p.stars && !p.marketDownloads && !p.downloads && !p.skillInstalls) tags.push('<span class="tag">' + esc(hostLabel(p.host)) + "</span>");
 
     var badges = isNew(p, i) ? '<span class="badge-new">最新</span>' : "";
 
@@ -130,7 +134,9 @@
     meta.push(esc(hostLabel(p.host)));
 
     return (
-      '<article class="product" id="plugin-' + esc(p.id) + '" data-plugin-id="' + esc(p.id) + '" data-reveal data-reveal-delay="' + (i % 3) * 80 + '">' +
+      '<article class="product" id="plugin-' + esc(p.id) + '" data-plugin-id="' + esc(p.id) + '"' +
+        (p.statRepo ? ' data-repo="' + esc(p.statRepo) + '"' : "") +
+        ' data-reveal data-reveal-delay="' + (i % 3) * 80 + '">' +
         '<div class="product__media">' + media + "</div>" +
         '<div class="product__tags">' + tags.join("") + "</div>" +
         '<h3 class="t-2xl product__name">' +
@@ -186,10 +192,19 @@
 
   /* ---------- 统计 ---------- */
   function stats() {
-    var stars = ALL.reduce(function (s, p) { return s + (p.stars || 0); }, 0);
+    // 星数按仓库去重：同一个仓库出多个技能时，星数只算一次
+    var seen = {};
+    var stars = ALL.reduce(function (s, p) {
+      if (!p.stars) return s;
+      var key = p.statRepo || p.id;
+      if (seen[key]) return s;
+      seen[key] = 1;
+      return s + p.stars;
+    }, 0);
     var dl = ALL.reduce(function (s, p) { return s + (p.downloads || 0); }, 0);
     var market = ALL.reduce(function (s, p) { return s + (p.marketDownloads || 0); }, 0);
-    return { count: ALL.length, stars: stars, downloads: dl, market: market };
+    var installs = ALL.reduce(function (s, p) { return s + (p.skillInstalls || 0); }, 0);
+    return { count: ALL.length, stars: stars, downloads: dl, market: market, installs: installs };
   }
 
   function applyStats() {
@@ -198,6 +213,7 @@
     document.querySelectorAll("[data-stat-stars]").forEach(function (el) { el.textContent = num(s.stars); });
     document.querySelectorAll("[data-stat-downloads]").forEach(function (el) { el.textContent = num(s.downloads); });
     document.querySelectorAll("[data-stat-market]").forEach(function (el) { el.textContent = num(s.market); });
+    document.querySelectorAll("[data-stat-installs]").forEach(function (el) { el.textContent = num(s.installs); });
     document.querySelectorAll("[data-count-plugins]").forEach(function (el) { el.textContent = String(s.count); });
     document.querySelectorAll("[data-count-plugins-text]").forEach(function (el) {
       el.textContent = "已收录 " + s.count + " 款";

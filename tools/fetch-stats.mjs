@@ -51,15 +51,54 @@ export async function githubStats(url) {
   };
 }
 
-/** npm 近 30 天下载量 */
+/** npm 近 30 天下载量
+ *  注意：不要用 point/last-month —— 那个端点在部分网络链路上会被 CDN 缓存成几个月前的
+ *  快照（返回 0 次下载）。自己算日期区间走 point/<起>:<止>，拿到的才是真数。
+ */
 export async function npmDownloads(pkg) {
   try {
-    const res = await fetch(`https://api.npmjs.org/downloads/point/last-month/${encodeURIComponent(pkg)}`);
+    const end = new Date();
+    const start = new Date(end.getTime() - 29 * 86400000);
+    const fmt = (d) => d.toISOString().slice(0, 10);
+    const res = await fetch(
+      `https://api.npmjs.org/downloads/point/${fmt(start)}:${fmt(end)}/${encodeURIComponent(pkg)}`
+    );
     if (!res.ok) return 0;
     const j = await res.json();
     return j.downloads || 0;
   } catch {
     return 0;
+  }
+}
+
+/** skills.sh 技能页的累计安装量 */
+export async function skillsShInstalls(url) {
+  try {
+    const res = await fetch(url, { headers: { "user-agent": UA } });
+    if (!res.ok) return 0;
+    const html = await res.text();
+    // 页面里 JSON-LD 的 userInteractionCount 就是安装数
+    const m = html.match(/"userInteractionCount"\s*:\s*(\d+)/);
+    return m ? parseInt(m[1], 10) : 0;
+  } catch {
+    return 0;
+  }
+}
+
+/** skills.sh 技能页的展示名与作者 */
+export async function skillsShMeta(url) {
+  try {
+    const res = await fetch(url, { headers: { "user-agent": UA } });
+    if (!res.ok) return {};
+    const html = await res.text();
+    const out = {};
+    const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/);
+    if (h1) out.title = h1[1].replace(/<[^>]+>/g, "").trim();
+    const desc = html.match(/<meta[^>]+name="description"[^>]+content="([^"]*)"/);
+    if (desc) out.desc = desc[1];
+    return out;
+  } catch {
+    return {};
   }
 }
 
@@ -109,8 +148,10 @@ export async function marketMeta(url) {
   }
 }
 
-/** 一次性把一条记录该有的数全抓齐 */
-export async function fetchAll(url) {
+/** 一次性把一条记录该有的数全抓齐
+ *  extras 是这条条目附带的其它链接，skills.sh 的条目靠它找到自己的 GitHub 仓库。
+ */
+export async function fetchAll(url, extras = []) {
   const host = hostOf(url);
   const out = { url, host, slug: slugOf(url), verifiedAt: new Date().toISOString().slice(0, 10) };
 
@@ -121,6 +162,24 @@ export async function fetchAll(url) {
   } else if (host === "npm") {
     out.pkg = pkgOf(url, host);
     out.downloads = await npmDownloads(out.pkg);
+  } else if (host === "skills-sh") {
+    out.pkg = pkgOf(url, host);
+    out.skillInstalls = await skillsShInstalls(url);
+    const meta = await skillsShMeta(url);
+    if (meta.title) out.skillTitle = meta.title;
+    // 技能本身在 GitHub 上的仓库，星数 / 许可 / 作者从那儿来
+    for (const ex of extras) {
+      if (/github\.com\//.test(ex)) {
+        const gh = await githubStats(ex);
+        if (gh) {
+          out.stars = gh.stars;
+          out.license = gh.license;
+          out.author = gh.author;
+          out.repo = gh.repo;
+        }
+        break;
+      }
+    }
   } else {
     out.pkg = pkgOf(url, host);
     out.marketDownloads = await marketDownloads(url);

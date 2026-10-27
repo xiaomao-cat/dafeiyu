@@ -23,6 +23,7 @@
     var h = String(url || "").toLowerCase();
     if (h.indexOf("npmjs.com") > -1) return "npm";
     if (h.indexOf("skillhub.cn") > -1) return "skillhub";
+    if (h.indexOf("skills.sh") > -1) return "skills-sh";
     return "skill-repo";
   }
 
@@ -39,6 +40,10 @@
       for (var j = 0; j < p.length; j++) {
         if (p[j].toLowerCase() === "skills") return p.slice(j + 1);
       }
+      return p;
+    }
+    if (host === "skills-sh") {
+      // skills.sh 是 /owner/repo/skill（仓库级是 /owner/repo），整段都要留
       return p;
     }
     // GitHub：owner/repo 一定要留下，后面的段再滤掉 tree/blob/main 这类
@@ -71,6 +76,7 @@
     if (h === "codex") return "Codex 桌面端";
     if (h === "dsh") return "DeepSeek Harness";
     if (h === "skillhub") return "技能市场";
+    if (h === "skills-sh") return "skills.sh 目录";
     if (h === "npm") return "npm 包";
     if (h === "standalone") return "独立工具";
     if (h === "skill-repo") return "技能仓库（GitHub）";
@@ -79,6 +85,7 @@
 
   function primaryLinkLabel(host) {
     if (host === "skillhub") return "技能市场页";
+    if (host === "skills-sh") return "skills.sh 页面";
     if (host === "npm") return "npm 包";
     return "源码仓库";
   }
@@ -102,7 +109,12 @@
     "语音": "ph-microphone-stage",
     "绘图": "ph-palette",
     "协议": "ph-stack",
-    "聊天": "ph-chat-circle-dots"
+    "聊天": "ph-chat-circle-dots",
+    "学习": "ph-student",
+    "蒸馏": "ph-drop",
+    "教学": "ph-chalkboard-teacher",
+    "拷问": "ph-fire",
+    "发现": "ph-binoculars"
   };
   function iconFor(cat) {
     return CATEGORY_ICON[cat] || "ph-terminal-window";
@@ -113,6 +125,7 @@
     if (label.indexOf("npm") > -1) return "ph-package";
     if (label.indexOf("下载") > -1) return "ph-download-simple";
     if (label.indexOf("技能市场") > -1) return "ph-package";
+    if (label.indexOf("skills.sh") > -1) return "ph-compass";
     return "ph-github-logo";
   }
 

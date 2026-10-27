@@ -3,7 +3,7 @@
  * 用 CDP 直接驱动本机 Edge，逐项检查页面上每个交互功能是否真的能用。
  *   node tools/verify.mjs [baseUrl]
  */
-import { spawn } from "node:child_process";
+import { spawn, execFileSync } from "node:child_process";
 import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -159,12 +159,26 @@ async function main() {
     check("合集命令块已整块移除", (await evaluate("return !document.getElementById('claim-shell')")) === true);
     check("领取面板区块已移除", (await evaluate("return !document.getElementById('get')")) === true);
     check("GitHub Star 合计与卡片上的数一致", await evaluate(`
+      // 同一个仓库出多个技能时，星数只能算一次（和页面 stats() 同一套算法）
       const cards = [...document.querySelectorAll('#plugin-grid .product')];
+      const seen = {};
       const total = cards.reduce((a,c)=>{
         const t = [...c.querySelectorAll('.tag')].map(x=>x.textContent).find(x=>/GitHub .*Star/.test(x));
-        return a + (t ? parseInt(t.replace(/[^0-9]/g,''),10) : 0);
+        if (!t) return a;
+        const key = c.getAttribute('data-repo') || c.id;
+        if (seen[key]) return a;
+        seen[key] = 1;
+        return a + parseInt(t.replace(/[^0-9]/g,''),10);
       },0);
       return String(total) === document.querySelector('[data-stat-stars]').textContent.replace(/,/g,'');
+    `));
+    check("skills.sh 安装合计与卡片上的数一致", await evaluate(`
+      const cards = [...document.querySelectorAll('#plugin-grid .product')];
+      const total = cards.reduce((a,c)=>{
+        const t = [...c.querySelectorAll('.tag')].map(x=>x.textContent).find(x=>/skills\\.sh .*次安装/.test(x));
+        return a + (t ? parseInt(t.replace(/[^0-9]/g,''),10) : 0);
+      },0);
+      return String(total) === document.querySelector('[data-stat-installs]').textContent.replace(/,/g,'');
     `));
     check("技能市场下载合计与卡片上的数一致", await evaluate(`
       const cards = [...document.querySelectorAll('#plugin-grid .product')];
@@ -388,6 +402,23 @@ async function main() {
     `);
     const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36";
     let bad = [];
+
+    // GitHub 的仓库内文件路径：走已登录的 gh api 查。
+    // 匿名请求 github.com 连续多了会被限流（429），链接却是好的。
+    async function ghFileExists(u) {
+      const m = u.match(/github\.com\/([^/]+)\/([^/]+)\/(?:blob|tree)\/([^/]+)\/(.+)$/);
+      if (!m) return null;
+      const [, owner, repo, ref, path] = m;
+      try {
+        execFileSync("gh", ["api", `repos/${owner}/${repo}/contents/${path}?ref=${ref}`], {
+          stdio: ["ignore", "ignore", "pipe"], timeout: 20000,
+        });
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+
     for (const u of ext) {
       // npm 官网有 Cloudflare 爬虫拦截，改用 registry 接口验证包是否真的存在。
       // scoped 包名带斜杠（@snowluma/sdk），要整个取下来再把斜杠编码成 %2F，
@@ -395,13 +426,24 @@ async function main() {
       const m = u.match(/npmjs\.com\/package\/([^?#]+)/);
       const pkgName = m ? m[1].replace(/\/+$/, "") : "";
       const probe = pkgName ? `https://registry.npmjs.org/${pkgName.replace("/", "%2F")}` : u;
+
+      const ghResult = await ghFileExists(u);
+      if (ghResult !== null) {
+        if (!ghResult) bad.push(`${u} → GitHub 上没有这个路径`);
+        continue;
+      }
+
       let ok = false;
       let lastErr = "";
-      for (let attempt = 0; attempt < 3 && !ok; attempt++) {
+      for (let attempt = 0; attempt < 4 && !ok; attempt++) {
         try {
           const r = await fetch(probe, { headers: { "user-agent": UA }, redirect: "follow" });
           if (r.ok) ok = true;
-          else lastErr = `→ ${r.status}`;
+          else {
+            lastErr = `→ ${r.status}`;
+            // 429 是限流不是坏链，退避后再试
+            if (r.status === 429) await sleep(2000 * (attempt + 1));
+          }
         } catch (e) {
           lastErr = `→ ${e.message}`;
           await sleep(800);

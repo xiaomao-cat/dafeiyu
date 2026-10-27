@@ -31,11 +31,17 @@
 .ph-bell-ringing:before {
   content: "\e5e8";
 }
+.ph-binoculars:before {
+  content: "\ea64";
+}
 .ph-brackets-curly:before {
   content: "\e860";
 }
 .ph-caret-down:before {
   content: "\e136";
+}
+.ph-chalkboard-teacher:before {
+  content: "\e600";
 }
 .ph-chart-pie:before {
   content: "\e158";
@@ -46,11 +52,20 @@
 .ph-check-circle:before {
   content: "\e184";
 }
+.ph-compass:before {
+  content: "\e1c8";
+}
 .ph-copy:before {
   content: "\e1ca";
 }
 .ph-download-simple:before {
   content: "\e20c";
+}
+.ph-drop:before {
+  content: "\e210";
+}
+.ph-fire:before {
+  content: "\e242";
 }
 .ph-fish:before {
   content: "\e728";
@@ -105,6 +120,9 @@
 }
 .ph-stack:before {
   content: "\e466";
+}
+.ph-student:before {
+  content: "\e73e";
 }
 .ph-terminal-window:before {
   content: "\eae8";

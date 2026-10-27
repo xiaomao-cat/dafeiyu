@@ -70,12 +70,28 @@ if (!url || !name || !tagline || !category) {
 
 /* ---------- 抓活数据 ---------- */
 console.log(`\n🔍 抓取 ${url} …`);
-const s = await fetchAll(url);
+// 附带链接要先解析出来：skills.sh 的条目要靠它找到自己的 GitHub 仓库取星数
+const extraPairs = flags.extra
+  ? String(flags.extra).split(/[,，]/).map((x) => x.trim()).filter(Boolean).map((pair) => {
+      const [l, u] = pair.split("|").map((x) => (x || "").trim());
+      return { label: l, url: u };
+    })
+  : [];
+// 主链接已经在链接区第一位了，再放一遍就是重复
+const extraFinal = extraPairs.filter((x) => {
+  if (x.url === url) {
+    console.log(`   （跳过重复的附带链接：${x.label}，和主链接一样）`);
+    return false;
+  }
+  return true;
+});
+const s = await fetchAll(url, extraFinal.map((x) => x.url));
 const bits = [];
 if (s.stars != null) bits.push(`${s.stars} Star`);
 if (s.license) bits.push(s.license);
 if (s.downloads) bits.push(`npm 近 30 天 ${s.downloads.toLocaleString("en-US")}`);
 if (s.marketDownloads) bits.push(`技能市场 ${s.marketDownloads.toLocaleString("en-US")}`);
+if (s.skillInstalls) bits.push(`skills.sh ${s.skillInstalls.toLocaleString("en-US")}`);
 if (s.version) bits.push(`v${s.version}`);
 console.log(bits.length ? `   → ${bits.join(" · ")}` : "   → 这条没抓到活数据");
 
@@ -88,12 +104,7 @@ if (flags.host) entry.host = flags.host;
 if (flags.note) entry.note = flags.note;
 if (flags.warning) entry.warning = flags.warning;
 if (flags.features) entry.features = String(flags.features).split(/[,，]/).map((x) => x.trim()).filter(Boolean);
-if (flags.extra) {
-  entry.extra = String(flags.extra).split(/[,，]/).map((x) => x.trim()).filter(Boolean).map((pair) => {
-    const [l, u] = pair.split("|").map((x) => (x || "").trim());
-    return { label: l, url: u };
-  });
-}
+if (extraFinal.length) entry.extra = extraFinal;
 
 /* ---------- 读写数据文件 ---------- */
 const { arr, head, tail } = readDataFile(DATA);

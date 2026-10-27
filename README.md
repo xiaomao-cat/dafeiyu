@@ -28,9 +28,21 @@ node tools/add-plugin.mjs \
 
 这条命令会：
 
-1. 抓这条链接的活数据（GitHub 星数、许可、npm 近 30 天下载量、技能市场累计下载量、版本号）
+1. 抓这条链接的活数据（GitHub 星数、许可、npm 近 30 天下载量、技能市场累计下载量、skills.sh 累计安装次数、版本号）
 2. 写进 `assets/plugins.data.js` 的数组末尾
 3. 刷新 `assets/stats.js`（活数据）和 `assets/ph.css`（图标子集）
+
+活数据从哪儿来，按链接来源自动判断：
+
+| 来源 | 取的数 |
+|---|---|
+| GitHub 仓库 | 星数、许可、作者 |
+| npm 包 | 近 30 天下载量 |
+| skillhub.cn | 累计下载量、版本号 |
+| skills.sh 技能页 | 累计安装次数（页面 JSON-LD 里的 `userInteractionCount`） |
+
+> skills.sh 的条目，`extra` 里要放一条它的 GitHub 仓库链接 —— 星数和许可是从那儿取的。
+> 同一个仓库出了多个技能时，Star 合计只算一次。
 
 可选参数：
 
@@ -40,7 +52,7 @@ node tools/add-plugin.mjs \
 | `--warning "提示文字"` | 红色的特别提醒 |
 | `--features "一,二,三"` | 功能点，逗号分隔 |
 | `--extra "标签\|网址,标签\|网址"` | 额外的链接行 |
-| `--host dsh\|codex\|skillhub\|skill-repo` | 手动指定宿主（默认按网址推断） |
+| `--host dsh\|codex\|skillhub\|skills-sh\|skill-repo\|standalone` | 手动指定宿主（默认按网址推断） |
 | `--kind command\|prompt\|link` | 安装方式：终端命令 / 粘给 Agent / 只给链接 |
 
 ### 方式 B：手写一条
@@ -72,7 +84,7 @@ node tools/add-plugin.mjs \
 |---|---|
 | 卡片 id | 从链接路径生成，如 `obra-superpowers` |
 | 包名 pkg | GitHub 给 `owner/repo`，技能市场给 `owner/slug`，npm 给包名 |
-| 宿主 host | `skillhub.cn` → 技能市场；`npmjs.com` → npm 包；GitHub → 技能仓库 |
+| 宿主 host | `skillhub.cn` → 技能市场；`skills.sh` → skills.sh 目录；`npmjs.com` → npm 包；GitHub → 技能仓库 |
 | 链接区 | 主链接自动生成，再拼上 `extra` |
 | 图标 | 按分类查 `assets/derive.js` 里的 `CATEGORY_ICON` |
 | 排序 | 数组里越靠前越靠前；最后一条自动带「最新」角标 |

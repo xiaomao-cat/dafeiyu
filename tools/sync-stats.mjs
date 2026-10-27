@@ -29,13 +29,15 @@ for (const ent of entries) {
   const url = ent.url;
   const slug = slugOf(url);
   try {
-    const s = await fetchAll(url);
+    const s = await fetchAll(url, ent.extras);
     const entry = { verifiedAt: s.verifiedAt };
     if (s.stars != null) entry.stars = s.stars;
     if (s.license) entry.license = s.license;
     if (s.author) entry.author = s.author;
     if (s.downloads != null) entry.downloads = s.downloads;
     if (s.marketDownloads != null) entry.marketDownloads = s.marketDownloads;
+    if (s.skillInstalls != null) entry.skillInstalls = s.skillInstalls;
+    if (s.repo) entry.repo = s.repo;
     if (s.version) entry.version = s.version;
 
     // 附带链接里的 npm 包也要抓下载量
@@ -55,6 +57,7 @@ for (const ent of entries) {
     if (entry.license) bits.push(entry.license);
     if (entry.downloads) bits.push(`npm ${entry.downloads.toLocaleString("en-US")}`);
     if (entry.marketDownloads) bits.push(`市场 ${entry.marketDownloads.toLocaleString("en-US")}`);
+    if (entry.skillInstalls) bits.push(`skills.sh ${entry.skillInstalls.toLocaleString("en-US")}`);
     if (entry.version) bits.push(`v${entry.version}`);
     console.log(`  ✅ ${slug}${bits.length ? "  — " + bits.join(" · ") : "  — 没抓到数"}`);
   } catch (e) {
@@ -79,14 +82,26 @@ writeFileSync(OUT, body, "utf8");
 console.log(`\n✅ 已写入 assets/stats.js（${Object.keys(stats).length} 条）`);
 
 /* ---------- 顺手把 index.html 里的静态数字也刷一遍 ---------- */
+// 星数按仓库去重，和页面里 stats() 的算法保持一致
+const seenRepo = {};
+function sumStars(obj) {
+  return Object.entries(obj).reduce((a, [slug, v]) => {
+    if (!v.stars) return a;
+    const key = v.repo || slug;
+    if (seenRepo[key]) return a;
+    seenRepo[key] = 1;
+    return a + v.stars;
+  }, 0);
+}
 const sum = (k) => Object.values(stats).reduce((a, b) => a + (b[k] || 0), 0);
 const htmlPath = join(ROOT, "index.html");
 let html = readFileSync(htmlPath, "utf8");
 const patch = {
   "data-stat-count": String(Object.keys(stats).length),
-  "data-stat-stars": sum("stars").toLocaleString("en-US"),
+  "data-stat-stars": sumStars(stats).toLocaleString("en-US"),
   "data-stat-downloads": sum("downloads").toLocaleString("en-US"),
   "data-stat-market": sum("marketDownloads").toLocaleString("en-US"),
+  "data-stat-installs": sum("skillInstalls").toLocaleString("en-US"),
   "data-count-plugins": String(Object.keys(stats).length),
   // 这一个是整句，JS 运行时也会把它整段换成同样的文案
   "data-count-plugins-text": "已收录 " + Object.keys(stats).length + " 款",
