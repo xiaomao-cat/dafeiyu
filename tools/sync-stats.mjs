@@ -88,6 +88,8 @@ const patch = {
   "data-stat-downloads": sum("downloads").toLocaleString("en-US"),
   "data-stat-market": sum("marketDownloads").toLocaleString("en-US"),
   "data-count-plugins": String(Object.keys(stats).length),
+  // 这一个是整句，JS 运行时也会把它整段换成同样的文案
+  "data-count-plugins-text": "已收录 " + Object.keys(stats).length + " 款",
 };
 let touched = 0;
 for (const [attr, val] of Object.entries(patch)) {

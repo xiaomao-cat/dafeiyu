@@ -7,8 +7,14 @@
  *   --warning "提示文字"       红色的特别提醒
  *   --features "一,二,三"      功能点，逗号分隔
  *   --extra "标签|网址,标签|网址"  额外的链接行
- *   --host dsh|codex|skillhub|skill-repo   手动指定宿主（默认按网址推断）
+ *   --host dsh|codex|skillhub|skill-repo|standalone   手动指定宿主（默认按网址推断）
  *   --kind command|prompt|link 安装方式类型：command=终端命令 prompt=粘给 Agent link=只给链接
+ *
+ * ⚠️ 注意：--features 和 --extra 都按逗号切分，所以每一条内部不能再用逗号，
+ *    否则会被拦腰截断。想在一句话里分句，用「；」或「、」。
+ *
+ *   另外，GitHub 认不出的许可（NOASSERTION）不会写进条目。
+ *   如果仓库里确实有标准许可，手动在 assets/plugins.data.js 那条里加一行 license: "MIT" 即可。
  *
  * 做的事：
  *   1. 抓这条链接的活数据（GitHub 星数 / 许可 / npm 或技能市场下载量 / 版本）
@@ -56,6 +62,8 @@ if (!url || !name || !tagline || !category) {
   --note "说明文字"      --warning "提示文字"      --features "一,二,三"
   --extra "标签|网址,标签|网址"                      --host dsh
   --kind command|prompt|link
+
+⚠️ --features / --extra 按逗号切分，每条内部别再用逗号，分句请用「；」或「、」。
 `);
   process.exit(1);
 }

@@ -72,6 +72,7 @@
     if (h === "dsh") return "DeepSeek Harness";
     if (h === "skillhub") return "技能市场";
     if (h === "npm") return "npm 包";
+    if (h === "standalone") return "独立工具";
     if (h === "skill-repo") return "技能仓库（GitHub）";
     return h || "";
   }
@@ -97,7 +98,11 @@
     "效率": "ph-lightning",
     "笔记": "ph-pencil-simple",
     "设计": "ph-brackets-curly",
-    "日报": "ph-bell-ringing"
+    "日报": "ph-bell-ringing",
+    "语音": "ph-microphone-stage",
+    "绘图": "ph-palette",
+    "协议": "ph-stack",
+    "聊天": "ph-chat-circle-dots"
   };
   function iconFor(cat) {
     return CATEGORY_ICON[cat] || "ph-terminal-window";

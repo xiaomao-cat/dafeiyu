@@ -40,6 +40,9 @@
 .ph-chart-pie:before {
   content: "\e158";
 }
+.ph-chat-circle-dots:before {
+  content: "\e16c";
+}
 .ph-check-circle:before {
   content: "\e184";
 }
@@ -73,6 +76,9 @@
 .ph-magnifying-glass:before {
   content: "\e30c";
 }
+.ph-microphone-stage:before {
+  content: "\e75c";
+}
 .ph-moon-stars:before {
   content: "\e58e";
 }
@@ -81,6 +87,9 @@
 }
 .ph-paint-brush:before {
   content: "\e6f0";
+}
+.ph-palette:before {
+  content: "\e6c8";
 }
 .ph-pencil-simple:before {
   content: "\e3b4";
@@ -93,6 +102,9 @@
 }
 .ph-sparkle:before {
   content: "\e6a2";
+}
+.ph-stack:before {
+  content: "\e466";
 }
 .ph-terminal-window:before {
   content: "\eae8";

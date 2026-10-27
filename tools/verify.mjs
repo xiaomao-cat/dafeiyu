@@ -5,10 +5,20 @@
  */
 import { spawn } from "node:child_process";
 import { setTimeout as sleep } from "node:timers/promises";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
+import { slugOf } from "./fetch-stats.mjs";
+import { readDataFile } from "./serialize.mjs";
 
 const BASE = process.argv[2] || "http://127.0.0.1:8899/index.html";
 const EDGE = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge";
 const PORT = 9333;
+
+/* 期望值从数据文件读，加插件不用再改这个脚本 */
+const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
+const ENTRIES = readDataFile(join(ROOT, "assets", "plugins.data.js")).arr;
+const N = ENTRIES.length;
+const IDS = ENTRIES.map((e) => "plugin-" + slugOf(e.url)).sort();
 
 let msgId = 0;
 const pending = new Map();
@@ -133,28 +143,19 @@ async function main() {
       } catch {
         rendered = 0; // reload 期间执行上下文还没建好
       }
-      if (rendered >= 17) break;
+      if (rendered >= N) break;
     }
     await sleep(400); // 让活数据（星数 / 下载量）覆盖完
 
     console.log("\n▸ 页面加载与数据渲染");
     check("页面标题正确", (await evaluate("return document.title")).includes("大肥鱼合集"));
-    check("插件数量写进标题", (await evaluate("return document.querySelector('[data-catalog-heading]').textContent")).includes("17 款"));
-    check("渲染出 17 张插件卡", (await evaluate("return document.querySelectorAll('#plugin-grid .product').length")) === 17);
+    check("插件数量写进标题", (await evaluate("return document.querySelector('[data-catalog-heading]').textContent")).includes(`${N} 款`));
+    check(`渲染出 ${N} 张插件卡`, (await evaluate("return document.querySelectorAll('#plugin-grid .product').length")) === N);
     check("卡片 id 齐全", await evaluate(`
       const ids = [...document.querySelectorAll('#plugin-grid .product')].map(e=>e.id).sort().join(',');
-      const want = ${JSON.stringify([
-        "plugin-pc2005-cloud-dsh-pet", "plugin-meteornox-deepseek-balance-whale-widget",
-        "plugin-t7moris-gpt-niang", "plugin-obra-superpowers", "plugin-juliusbrussee-caveman",
-        "plugin-ayghri-i-have-adhd", "plugin-mvanhorn-last30days-skill", "plugin-kepano-obsidian-skills",
-        "plugin-emilkowalski-skills", "plugin-wanshuiyin-auto-claude-code-research-in-sleep",
-        "plugin-yuan1z0825-nature-skills", "plugin-clawhub-paudyyin-summarize",
-        "plugin-user-bddf3fe6-contextweave-interactive-architecture", "plugin-user-5b28ea14-smart-charts",
-        "plugin-zcwl-multi-search-engine", "plugin-indiv-ebandao-anti-fraud",
-        "plugin-c1overzz-dsh-bili-scroll",
-      ])};
+      const want = ${JSON.stringify(IDS)};
       return ids === want.slice().sort().join(',');
-    `), "共 17 个 id");
+    `), `共 ${N} 个 id`);
     check("合集命令块已整块移除", (await evaluate("return !document.getElementById('claim-shell')")) === true);
     check("领取面板区块已移除", (await evaluate("return !document.getElementById('get')")) === true);
     check("GitHub Star 合计与卡片上的数一致", await evaluate(`
@@ -173,8 +174,8 @@ async function main() {
       },0);
       return String(total) === document.querySelector('[data-stat-market]').textContent.replace(/,/g,'');
     `));
-    check("导航计数徽标", (await evaluate("return document.querySelector('.nav__badge').textContent")) === "17");
-    check("页脚收录列表自动生成", (await evaluate("return document.querySelectorAll('#footer-plugins li').length")) === 17);
+    check("导航计数徽标", (await evaluate("return document.querySelector('.nav__badge').textContent")) === String(N));
+    check("页脚收录列表自动生成", (await evaluate("return document.querySelectorAll('#footer-plugins li').length")) === N);
 
     console.log("\n▸ 搜索");
     await evaluate(`
@@ -184,7 +185,7 @@ async function main() {
     `);
     await sleep(400);
     check("搜「余额」筛出 2 款", (await evaluate("return document.querySelectorAll('#plugin-grid .product').length")) === 2);
-    check("计数同步更新", (await evaluate("return document.getElementById('catalog-count').textContent")) === "显示 2 / 17 款");
+    check("计数同步更新", (await evaluate("return document.getElementById('catalog-count').textContent")) === `显示 2 / ${N} 款`);
     await evaluate(`
       const i = document.querySelector('[data-search]');
       i.value = 'zzz不存在';
@@ -199,7 +200,7 @@ async function main() {
       i.dispatchEvent(new Event('input', {bubbles:true}));
     `);
     await sleep(400);
-    check("清空搜索恢复 17 款", (await evaluate("return document.querySelectorAll('#plugin-grid .product').length")) === 17);
+    check(`清空搜索恢复 ${N} 款`, (await evaluate("return document.querySelectorAll('#plugin-grid .product').length")) === N);
 
     console.log("\n▸ 分类与宿主筛选");
     await evaluate(`document.querySelector('[data-cat="挂件"]').click()`);
@@ -236,7 +237,7 @@ async function main() {
       s.dispatchEvent(new Event('change', {bubbles:true}));
     `);
     await sleep(250);
-    check("最近收录第一条是最后加进来的", (await evaluate("return document.querySelector('#plugin-grid .product').id")) === "plugin-c1overzz-dsh-bili-scroll");
+    check("最近收录第一条是最后加进来的", (await evaluate("return document.querySelector('#plugin-grid .product').id")) === `plugin-${slugOf(ENTRIES[ENTRIES.length - 1].url)}`);
     await evaluate(`
       const s = document.querySelector('[data-sort]');
       s.value = 'catalog';
@@ -246,7 +247,7 @@ async function main() {
     check("目录顺序第一张是大肥鱼桌宠", (await evaluate("return document.querySelector('#plugin-grid .product').id")) === "plugin-pc2005-cloud-dsh-pet");
 
     console.log("\n▸ 插件链接（访客找链接的主路径）");
-    check("每张卡都有链接区", (await evaluate("return document.querySelectorAll('#plugin-grid .product__links').length")) === 17);
+    check("每张卡都有链接区", (await evaluate("return document.querySelectorAll('#plugin-grid .product__links').length")) === N);
     check("每张卡至少一个可点链接", await evaluate(`
       return [...document.querySelectorAll('#plugin-grid .product')].every(c => c.querySelectorAll('.plink__a').length >= 1);
     `));
@@ -388,9 +389,12 @@ async function main() {
     const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36";
     let bad = [];
     for (const u of ext) {
-      // npm 官网有 Cloudflare 爬虫拦截，改用 registry 接口验证包是否真的存在
-      const m = u.match(/npmjs\.com\/package\/([^/?#]+)/);
-      const probe = m ? `https://registry.npmjs.org/${m[1]}` : u;
+      // npm 官网有 Cloudflare 爬虫拦截，改用 registry 接口验证包是否真的存在。
+      // scoped 包名带斜杠（@snowluma/sdk），要整个取下来再把斜杠编码成 %2F，
+      // 否则 registry 会返回 405。
+      const m = u.match(/npmjs\.com\/package\/([^?#]+)/);
+      const pkgName = m ? m[1].replace(/\/+$/, "") : "";
+      const probe = pkgName ? `https://registry.npmjs.org/${pkgName.replace("/", "%2F")}` : u;
       let ok = false;
       let lastErr = "";
       for (let attempt = 0; attempt < 3 && !ok; attempt++) {
