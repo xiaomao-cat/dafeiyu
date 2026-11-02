@@ -217,16 +217,22 @@ async function main() {
     check(`清空搜索恢复 ${N} 款`, (await evaluate("return document.querySelectorAll('#plugin-grid .product').length")) === N);
 
     console.log("\n▸ 分类与宿主筛选");
+    // 期望值从数据文件算出来，不要写死 —— 加了新条目就会误报
+    const wantWidgets = ENTRIES.filter((e) => e.category === "挂件").length;
+    const wantCodex = ENTRIES.filter((e) => (e.host || "") === "codex").length;
     await evaluate(`document.querySelector('[data-cat="挂件"]').click()`);
     await sleep(250);
-    check("类型筛「挂件」得 2 款", (await evaluate("return document.querySelectorAll('#plugin-grid .product').length")) === 2);
+    check(`类型筛「挂件」得 ${wantWidgets} 款`, (await evaluate("return document.querySelectorAll('#plugin-grid .product').length")) === wantWidgets);
     check("被选中的 chip 标记 pressed", (await evaluate("return document.querySelector('[data-cat=\"挂件\"]').getAttribute('aria-pressed')")) === "true");
     await evaluate(`document.querySelector('[data-cat="全部"]').click()`);
     await sleep(250);
     await evaluate(`document.querySelector('[data-host="codex"]').click()`);
     await sleep(250);
-    check("宿主筛「Codex」得 1 款", (await evaluate("return document.querySelectorAll('#plugin-grid .product').length")) === 1);
-    check("剩下的是 GPT娘", (await evaluate("return document.querySelector('#plugin-grid .product').id")) === "plugin-t7moris-gpt-niang");
+    check(`宿主筛「Codex」得 ${wantCodex} 款`, (await evaluate("return document.querySelectorAll('#plugin-grid .product').length")) === wantCodex);
+    check("Codex 筛出来的卡片确实都在 codex 宿主下", await evaluate(`
+      const cards = [...document.querySelectorAll('#plugin-grid .product')];
+      return cards.length > 0 && cards.every(c => c.getAttribute('data-host') === 'codex');
+    `), `${wantCodex} 张卡`);
     await evaluate(`document.querySelector('[data-host="全部"]').click()`);
     await sleep(250);
 

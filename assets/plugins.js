@@ -136,6 +136,7 @@
     return (
       '<article class="product" id="plugin-' + esc(p.id) + '" data-plugin-id="' + esc(p.id) + '"' +
         (p.statRepo ? ' data-repo="' + esc(p.statRepo) + '"' : "") +
+        ' data-host="' + esc(p.host) + '"' +
         ' data-reveal data-reveal-delay="' + (i % 3) * 80 + '">' +
         '<div class="product__media">' + media + "</div>" +
         '<div class="product__tags">' + tags.join("") + "</div>" +

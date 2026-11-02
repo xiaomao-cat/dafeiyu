@@ -9,6 +9,20 @@ const exec = promisify(execFile);
 
 const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36";
 
+/** 带超时的 fetch：skills.sh / skillhub 这类站点偶尔会挂住不返回，
+ *  没有上限的话一条能拖死整轮抓数（实测卡过 900 秒）。
+ */
+const FETCH_TIMEOUT_MS = 20000;
+async function fetchWithTimeout(url, opts = {}) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), opts.timeout || FETCH_TIMEOUT_MS);
+  try {
+    return await fetch(url, { ...opts, signal: ctrl.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 // 推导规则直接读页面的 assets/derive.js，保证两边算出来一模一样
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
@@ -35,7 +49,7 @@ export async function githubStats(url) {
     const { stdout } = await exec("gh", ["api", `repos/${repo}`], { maxBuffer: 4 << 20 });
     raw = JSON.parse(stdout);
   } catch {
-    const res = await fetch(`https://api.github.com/repos/${repo}`, {
+    const res = await fetchWithTimeout(`https://api.github.com/repos/${repo}`, {
       headers: { "user-agent": UA, accept: "application/vnd.github+json" },
     });
     if (!res.ok) return null;
@@ -60,7 +74,7 @@ export async function npmDownloads(pkg) {
     const end = new Date();
     const start = new Date(end.getTime() - 29 * 86400000);
     const fmt = (d) => d.toISOString().slice(0, 10);
-    const res = await fetch(
+    const res = await fetchWithTimeout(
       `https://api.npmjs.org/downloads/point/${fmt(start)}:${fmt(end)}/${encodeURIComponent(pkg)}`
     );
     if (!res.ok) return 0;
@@ -71,41 +85,47 @@ export async function npmDownloads(pkg) {
   }
 }
 
+/** skills.sh 技能页：累计安装量 + 展示名 + 作者
+ *  同一个页面只请求一次（缓存住），原来 installs / meta 各抓一遍，慢一倍。
+ */
+const skillsShCache = new Map();
+export async function skillsShPage(url) {
+  if (skillsShCache.has(url)) return skillsShCache.get(url);
+  let out = { installs: 0, title: "", desc: "" };
+  try {
+    const res = await fetchWithTimeout(url, { headers: { "user-agent": UA } });
+    if (res.ok) {
+      const html = await res.text();
+      // 页面里 JSON-LD 的 userInteractionCount 就是安装数
+      const m = html.match(/"userInteractionCount"\s*:\s*(\d+)/);
+      out.installs = m ? parseInt(m[1], 10) : 0;
+      const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/);
+      if (h1) out.title = h1[1].replace(/<[^>]+>/g, "").trim();
+      const desc = html.match(/<meta[^>]+name="description"[^>]+content="([^"]*)"/);
+      if (desc) out.desc = desc[1];
+    }
+  } catch {
+    // 抓不到就留空，不该让整轮抓数挂掉
+  }
+  skillsShCache.set(url, out);
+  return out;
+}
+
 /** skills.sh 技能页的累计安装量 */
 export async function skillsShInstalls(url) {
-  try {
-    const res = await fetch(url, { headers: { "user-agent": UA } });
-    if (!res.ok) return 0;
-    const html = await res.text();
-    // 页面里 JSON-LD 的 userInteractionCount 就是安装数
-    const m = html.match(/"userInteractionCount"\s*:\s*(\d+)/);
-    return m ? parseInt(m[1], 10) : 0;
-  } catch {
-    return 0;
-  }
+  return (await skillsShPage(url)).installs;
 }
 
 /** skills.sh 技能页的展示名与作者 */
 export async function skillsShMeta(url) {
-  try {
-    const res = await fetch(url, { headers: { "user-agent": UA } });
-    if (!res.ok) return {};
-    const html = await res.text();
-    const out = {};
-    const h1 = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/);
-    if (h1) out.title = h1[1].replace(/<[^>]+>/g, "").trim();
-    const desc = html.match(/<meta[^>]+name="description"[^>]+content="([^"]*)"/);
-    if (desc) out.desc = desc[1];
-    return out;
-  } catch {
-    return {};
-  }
+  const { title, desc } = await skillsShPage(url);
+  return title || desc ? { title, desc } : {};
 }
 
 /** 技能市场累计下载量 */
 export async function marketDownloads(url) {
   try {
-    const res = await fetch(url, { headers: { "user-agent": UA } });
+    const res = await fetchWithTimeout(url, { headers: { "user-agent": UA } });
     if (!res.ok) return 0;
     const html = await res.text();
     const m = html.match(/"downloads"\s*:\s*(\d+)/);
@@ -118,7 +138,7 @@ export async function marketDownloads(url) {
 /** 技能市场的版本号 */
 export async function marketVersion(url) {
   try {
-    const res = await fetch(url, { headers: { "user-agent": UA } });
+    const res = await fetchWithTimeout(url, { headers: { "user-agent": UA } });
     if (!res.ok) return "";
     const html = await res.text();
     const m = html.match(/"version"\s*:\s*"([^"]+)"/);
@@ -131,7 +151,7 @@ export async function marketVersion(url) {
 /** 技能市场页面的展示名与作者名 */
 export async function marketMeta(url) {
   try {
-    const res = await fetch(url, { headers: { "user-agent": UA } });
+    const res = await fetchWithTimeout(url, { headers: { "user-agent": UA } });
     if (!res.ok) return {};
     const html = await res.text();
     const names = [...html.matchAll(/"displayName"\s*:\s*"([^"]+)"/g)].map((m) => m[1]);

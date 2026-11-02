@@ -67,6 +67,9 @@
 .ph-drop:before {
   content: "\e210";
 }
+.ph-film-strip:before {
+  content: "\e792";
+}
 .ph-fire:before {
   content: "\e242";
 }
