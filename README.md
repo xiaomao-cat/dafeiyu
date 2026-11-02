@@ -44,6 +44,17 @@ node tools/add-plugin.mjs \
 > skills.sh 的条目，`extra` 里要放一条它的 GitHub 仓库链接 —— 星数和许可是从那儿取的。
 > 同一个仓库出了多个技能时，Star 合计只算一次。
 
+**GitHub 返回 NOASSERTION 的仓库要手动查 LICENSE**（`gh api repos/<repo>/license`），
+它的 `spdx_id` 不可信。已手工核过的几个：
+
+| 仓库 | 真实许可 |
+|---|---|
+| `remotion-dev/remotion` | 自有双档授权：个人与小公司免费（含商用），大公司需购买 |
+| `Vincentwei1021/anything2explainer` | PolyForm Noncommercial 1.0.0（非商用） |
+| `Vincentwei1021/video-talkcraft` | PolyForm Noncommercial 1.0.0（非商用） |
+
+这类条目在数据里手写 `license:` 和 `opensource: false`，卡片会标成非开源并显示红色提示。
+
 可选参数：
 
 | 参数 | 作用 |
