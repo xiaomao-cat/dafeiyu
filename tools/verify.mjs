@@ -490,6 +490,30 @@ async function main() {
       check(`${p} 可访问`, r === 200, `HTTP ${r}`);
     }
 
+    // 跨页面锚点：删掉区块后，子页面里的旧链接最容易漏。
+    // 这里把每个页面的 id 抓出来，逐个核对所有站内锚点目标是否真的存在。
+    const PAGES = ["index.html", "privacy.html", "terms.html", "404.html"];
+    const pageIds = {};
+    const pageHtml = {};
+    for (const p of PAGES) {
+      const html = await fetch(new URL(p, BASE)).then((r) => r.text()).catch(() => "");
+      pageHtml[p] = html;
+      pageIds[p] = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1]));
+    }
+    const badAnchors = [];
+    for (const p of PAGES) {
+      for (const m of pageHtml[p].matchAll(/href="([^"]*#[^"]*)"/g)) {
+        const href = m[1];
+        if (/^(https?:|mailto:|tel:|javascript:|data:)/.test(href)) continue;
+        const [rawFile, frag] = href.split("#");
+        if (!frag) continue;
+        const file = (rawFile || p).split("?")[0];
+        if (!pageIds[file]) { badAnchors.push(`${p} → ${href}（目标页不存在）`); continue; }
+        if (!pageIds[file].has(frag)) badAnchors.push(`${p} → ${href}（目标页没有 id="${frag}"）`);
+      }
+    }
+    check("全站锚点都能落到真实区块", badAnchors.length === 0, badAnchors.join("；"));
+
     const failed = results.filter((r) => !r.ok);
     console.log(`\n${"=".repeat(52)}`);
     console.log(`共 ${results.length} 项，通过 ${results.length - failed.length}，失败 ${failed.length}`);

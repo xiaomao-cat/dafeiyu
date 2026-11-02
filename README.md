@@ -129,7 +129,7 @@ python3 -m http.server 8899 --bind 127.0.0.1
 
 ## 三、上线部署
 
-线上地址：**https://xiaomao-cat.github.io/dafeiyu/**
+线上地址：<https://xiaomao-cat.github.io/dafeiyu/>
 
 站点托管在 GitHub Pages 上，`dafeiyu-site/` 本身就是那个仓库（分支 `main`，根目录直出）。
 没有构建步骤，不需要 Node 环境，push 完 GitHub 自动构建，一般十几秒上线。
