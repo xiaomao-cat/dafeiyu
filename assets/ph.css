@@ -37,6 +37,9 @@
 .ph-brackets-curly:before {
   content: "\e860";
 }
+.ph-brain:before {
+  content: "\e74e";
+}
 .ph-caret-down:before {
   content: "\e136";
 }

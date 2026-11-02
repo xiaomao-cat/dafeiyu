@@ -43,8 +43,11 @@ for (const ent of entries) {
     // 附带链接里的 npm 包也要抓下载量
     if (!entry.downloads) {
       for (const ex of ent.extras) {
-        if (/npmjs\.com\/package\//.test(ex)) {
-          const pkg = decodeURIComponent(ex.split("/package/")[1].split(/[/?#]/)[0]);
+        // scoped 包名带斜杠（@letta-ai/letta-code），要整个取下来再交给 npmDownloads 编码，
+        // 否则截成 "@letta-ai" 会抓到 0。
+        const m = ex.match(/npmjs\.com\/package\/([^?#]+)/);
+        if (m) {
+          const pkg = decodeURIComponent(m[1].replace(/\/+$/, ""));
           const dl = await npmDownloads(pkg);
           if (dl) { entry.downloads = dl; break; }
         }
