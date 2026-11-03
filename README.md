@@ -52,8 +52,21 @@ node tools/add-plugin.mjs \
 | `remotion-dev/remotion` | 自有双档授权：个人与小公司免费（含商用），大公司需购买 |
 | `Vincentwei1021/anything2explainer` | PolyForm Noncommercial 1.0.0（非商用） |
 | `Vincentwei1021/video-talkcraft` | PolyForm Noncommercial 1.0.0（非商用） |
+| `JimLiu/baoyu-design` | MIT，但只覆盖自有代码，Anthropic 素材与 NOTICE 里的第三方代码各按自己的条款 |
 
 这类条目在数据里手写 `license:` 和 `opensource: false`，卡片会标成非开源并显示红色提示。
+
+**仓库 topics 里的 `dsh-plugin` 不可信**。核实过的几个：
+
+| 仓库 | DSH 集成 | 插件包 |
+|---|---|---|
+| `reactive-resume/reactive-resume` | 真有 | `dsh-plugin-reactive-resume` |
+| `tt-a1i/archify` | 真有 | `@tt-a1i/archify-dsh` |
+| `DayuanJiang/next-ai-draw-io` | 真有 | `@next-ai-drawio/dsh` |
+| `JimLiu/baoyu-design` | 真有 | `dsh-claude-slides` / `dsh-claude-design` / `dsh-claude-design-system` / `dsh-claude-dashboard` / `dsh-claude-motion` |
+| `freestylefly/awesome-gpt-image-2` | **没有** | — 仓库与 README 都无 DSH 集成，topics 是虚标 |
+
+查法：`gh api repos/<repo>/git/trees/main?recursive=1 --jq '[.tree[]|select(.type=="blob")|.path] | map(select(test("dsh|deepseek";"i")))'`
 
 可选参数：
 

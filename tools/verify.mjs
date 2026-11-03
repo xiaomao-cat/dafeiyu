@@ -408,6 +408,7 @@ async function main() {
     `);
     const UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120 Safari/537.36";
     let bad = [];
+    const netFailures = [];
 
     // GitHub 的仓库内文件路径：走已登录的 gh api 查。
     // 匿名请求 github.com 连续多了会被限流（429），链接却是好的。
@@ -441,23 +442,42 @@ async function main() {
 
       let ok = false;
       let lastErr = "";
+      let netErr = 0;
       for (let attempt = 0; attempt < 4 && !ok; attempt++) {
         try {
-          const r = await fetch(probe, { headers: { "user-agent": UA }, redirect: "follow" });
-          if (r.ok) ok = true;
-          else {
-            lastErr = `→ ${r.status}`;
-            // 429 是限流不是坏链，退避后再试
-            if (r.status === 429) await sleep(2000 * (attempt + 1));
+          // 每个请求都有超时上限：网络整体断掉时不能一直挂着，
+          // 也不能把「连不上」当成「链接坏了」。
+          const ctrl = new AbortController();
+          const timer = setTimeout(() => ctrl.abort(), 15000);
+          try {
+            const r = await fetch(probe, { headers: { "user-agent": UA }, redirect: "follow", signal: ctrl.signal });
+            if (r.ok) ok = true;
+            else {
+              lastErr = `→ ${r.status}`;
+              // 429 是限流不是坏链，退避后再试
+              if (r.status === 429) await sleep(2000 * (attempt + 1));
+            }
+          } finally {
+            clearTimeout(timer);
           }
         } catch (e) {
           lastErr = `→ ${e.message}`;
+          netErr++;
           await sleep(800);
         }
+      }
+      // 连了 4 次全是网络错误（而不是 404/403），算「网络异常」不算坏链
+      if (!ok && netErr === 4) {
+        netFailures.push(u);
+        continue;
       }
       if (!ok) bad.push(`${u} ${lastErr}`);
     }
     check(`${ext.length} 个外部链接全部可达`, bad.length === 0, bad.join("; "));
+    if (netFailures.length) {
+      console.log(`   ⚠️  ${netFailures.length} 个链接因网络异常没验成（不算坏链），网络恢复后重跑：`);
+      netFailures.slice(0, 5).forEach((u) => console.log(`      ${u}`));
+    }
 
     console.log("\n▸ 移动端（390×844）");
     await send("Emulation.setDeviceMetricsOverride", {

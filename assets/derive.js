@@ -117,7 +117,8 @@
     "发现": "ph-binoculars",
     "上下文": "ph-gauge",
     "记忆": "ph-brain",
-    "视频": "ph-film-strip"
+    "视频": "ph-film-strip",
+    "简历": "ph-file-text"
   };
   function iconFor(cat) {
     return CATEGORY_ICON[cat] || "ph-terminal-window";

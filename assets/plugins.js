@@ -38,7 +38,9 @@
     var url = p.url || "";
     var host = p.host || hostOf(url);
     var st = STATS[slugOf(url)] || {};
-    var links = [{ label: primaryLinkLabel(host), url: url }].concat(p.extra || []);
+    // 主链接的标签按链接本身的来源判断，不能按条目的宿主：
+    // 一条 skills.sh 页面 + Codex 宿主的技能，标签仍该是「skills.sh 页面」。
+    var links = [{ label: primaryLinkLabel(hostOf(url)), url: url }].concat(p.extra || []);
     var stLicense = (st.license && st.license !== "NOASSERTION") ? st.license : "";
 
     return {
