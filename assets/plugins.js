@@ -50,7 +50,7 @@
       category: p.category || "其它",
       url: url,
       repo: p.repo || url,
-      pkg: p.pkg || pkgOf(url, host),
+      pkg: p.pkg || pkgOf(url, hostOf(url)),
       pkgUrl: p.pkgUrl || url,
       host: host,
       license: p.license || stLicense,
@@ -61,7 +61,7 @@
       skillInstalls: st.skillInstalls != null ? st.skillInstalls : (p.skillInstalls || 0),
       // 星数合计要按仓库去重：同一个仓库出两个技能时只能算一次
       statRepo: st.repo || "",
-      author: p.author || st.author || authorOf(url, host),
+      author: p.author || st.author || authorOf(url, hostOf(url)),
       version: st.version || p.version || "",
       media: p.media || "",
       mediaType: p.mediaType || "image",

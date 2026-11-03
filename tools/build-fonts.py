@@ -44,7 +44,8 @@ def collect_text() -> set:
         raw = re.sub(r"<[^>]+>", " ", raw)
         raw = htmllib.unescape(raw)
         chars.update(raw)
-    for name in ("assets/site.css", "assets/site.js", "assets/plugins.js"):
+    for name in ("assets/site.css", "assets/site.js", "assets/plugins.js",
+                 "assets/plugins.data.js", "assets/derive.js"):
         path = os.path.join(ROOT, name)
         if os.path.exists(path):
             chars.update(open(path, encoding="utf-8").read())

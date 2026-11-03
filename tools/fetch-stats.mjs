@@ -200,6 +200,9 @@ export async function fetchAll(url, extras = []) {
         break;
       }
     }
+  } else if (host === "web") {
+    // 文章页：没有包名、作者、下载量可自动抓，手写字段以数据文件为准
+    out.pkg = "";
   } else {
     out.pkg = pkgOf(url, host);
     out.marketDownloads = await marketDownloads(url);

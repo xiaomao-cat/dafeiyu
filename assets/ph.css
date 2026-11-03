@@ -28,6 +28,9 @@
 .ph-arrow-up-right:before {
   content: "\e092";
 }
+.ph-article:before {
+  content: "\e0a8";
+}
 .ph-bell-ringing:before {
   content: "\e5e8";
 }
@@ -123,6 +126,9 @@
 }
 .ph-puzzle-piece:before {
   content: "\e596";
+}
+.ph-robot:before {
+  content: "\e762";
 }
 .ph-shield-check:before {
   content: "\e40c";

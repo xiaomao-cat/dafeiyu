@@ -24,6 +24,8 @@
     if (h.indexOf("npmjs.com") > -1) return "npm";
     if (h.indexOf("skillhub.cn") > -1) return "skillhub";
     if (h.indexOf("skills.sh") > -1) return "skills-sh";
+    // 长文/文章页：不是代码仓库，别按 GitHub 那套派生
+    if (h.indexOf("rootdata.com") > -1) return "web";
     return "skill-repo";
   }
 
@@ -46,6 +48,10 @@
       // skills.sh 是 /owner/repo/skill（仓库级是 /owner/repo），整段都要留
       return p;
     }
+    if (host === "web") {
+      // 文章页：路径原样保留，slug 靠它保持稳定
+      return p;
+    }
     // GitHub：owner/repo 一定要留下，后面的段再滤掉 tree/blob/main 这类
     var head = p.slice(0, 2);
     var tail = p.slice(2).filter(function (s) {
@@ -61,14 +67,18 @@
   }
 
   function pkgOf(url, host) {
-    var segs = segments(url, host || hostOf(url));
+    host = host || hostOf(url);
+    var segs = segments(url, host);
     if (host === "npm") return segs[0] || "";
     if (host === "skillhub") return segs.slice(0, 2).join("/");
+    if (host === "web") return "";   // 文章页没有包名
     return segs.join("/");
   }
 
   function authorOf(url, host) {
-    var segs = segments(url, host || hostOf(url));
+    host = host || hostOf(url);
+    var segs = segments(url, host);
+    if (host === "web") return "";  // 文章页的作者得手写
     return segs[0] || "";
   }
 
@@ -79,6 +89,7 @@
     if (h === "skills-sh") return "skills.sh 目录";
     if (h === "npm") return "npm 包";
     if (h === "standalone") return "独立工具";
+    if (h === "article") return "文章";
     if (h === "skill-repo") return "技能仓库（GitHub）";
     return h || "";
   }
@@ -87,6 +98,7 @@
     if (host === "skillhub") return "技能市场页";
     if (host === "skills-sh") return "skills.sh 页面";
     if (host === "npm") return "npm 包";
+    if (host === "web") return "中文全文";
     return "源码仓库";
   }
 
@@ -118,7 +130,9 @@
     "上下文": "ph-gauge",
     "记忆": "ph-brain",
     "视频": "ph-film-strip",
-    "简历": "ph-file-text"
+    "简历": "ph-file-text",
+    "智能体": "ph-robot",
+    "长文": "ph-article"
   };
   function iconFor(cat) {
     return CATEGORY_ICON[cat] || "ph-terminal-window";
@@ -130,6 +144,7 @@
     if (label.indexOf("下载") > -1) return "ph-download-simple";
     if (label.indexOf("技能市场") > -1) return "ph-package";
     if (label.indexOf("skills.sh") > -1) return "ph-compass";
+    if (label.indexOf("文章") > -1 || label.indexOf("全文") > -1 || label.indexOf("原文") > -1) return "ph-article";
     return "ph-github-logo";
   }
 

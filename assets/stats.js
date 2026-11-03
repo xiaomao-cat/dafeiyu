@@ -10,7 +10,7 @@
 window.DAFEIYU_STATS = {
   "pc2005-cloud-dsh-pet": {
     "verifiedAt": "2026-11-03",
-    "stars": 5363,
+    "stars": 5379,
     "license": "MIT",
     "author": "PC2005-cloud",
     "repo": "PC2005-cloud/dsh-pet",
@@ -18,7 +18,7 @@ window.DAFEIYU_STATS = {
   },
   "meteornox-deepseek-balance-whale-widget": {
     "verifiedAt": "2026-11-03",
-    "stars": 6766,
+    "stars": 6772,
     "license": "MIT",
     "author": "MeteorNOX",
     "repo": "MeteorNOX/DeepSeek-Balance-Whale-Widget",
@@ -33,56 +33,56 @@ window.DAFEIYU_STATS = {
   },
   "obra-superpowers": {
     "verifiedAt": "2026-11-03",
-    "stars": 311282,
+    "stars": 311328,
     "license": "MIT",
     "author": "obra",
     "repo": "obra/superpowers"
   },
   "juliusbrussee-caveman": {
     "verifiedAt": "2026-11-03",
-    "stars": 116965,
+    "stars": 116982,
     "license": "Apache-2.0",
     "author": "JuliusBrussee",
     "repo": "JuliusBrussee/caveman"
   },
   "ayghri-i-have-adhd": {
     "verifiedAt": "2026-11-03",
-    "stars": 59840,
+    "stars": 59847,
     "license": "MIT",
     "author": "ayghri",
     "repo": "ayghri/i-have-adhd"
   },
   "mvanhorn-last30days-skill": {
     "verifiedAt": "2026-11-03",
-    "stars": 66381,
+    "stars": 66388,
     "license": "MIT",
     "author": "mvanhorn",
     "repo": "mvanhorn/last30days-skill"
   },
   "kepano-obsidian-skills": {
     "verifiedAt": "2026-11-03",
-    "stars": 50649,
+    "stars": 50655,
     "license": "MIT",
     "author": "kepano",
     "repo": "kepano/obsidian-skills"
   },
   "emilkowalski-skills": {
     "verifiedAt": "2026-11-03",
-    "stars": 53052,
+    "stars": 53061,
     "license": "MIT",
     "author": "emilkowalski",
     "repo": "emilkowalski/skills"
   },
   "wanshuiyin-auto-claude-code-research-in-sleep": {
     "verifiedAt": "2026-11-03",
-    "stars": 18513,
+    "stars": 18521,
     "license": "MIT",
     "author": "wanshuiyin",
     "repo": "wanshuiyin/Auto-claude-code-research-in-sleep"
   },
   "yuan1z0825-nature-skills": {
     "verifiedAt": "2026-11-03",
-    "stars": 51893,
+    "stars": 51905,
     "license": "Apache-2.0",
     "author": "Yuan1z0825",
     "repo": "Yuan1z0825/nature-skills"
@@ -90,36 +90,36 @@ window.DAFEIYU_STATS = {
   "clawhub-paudyyin-summarize": {
     "verifiedAt": "2026-11-03",
     "author": "paudyyin",
-    "marketDownloads": 860641,
+    "marketDownloads": 861178,
     "version": "1.0.0"
   },
   "user-bddf3fe6-contextweave-interactive-architecture": {
     "verifiedAt": "2026-11-03",
     "author": "user_bddf3fe6",
-    "marketDownloads": 457365,
+    "marketDownloads": 457861,
     "version": "1.8.0"
   },
   "user-5b28ea14-smart-charts": {
     "verifiedAt": "2026-11-03",
     "author": "user_5b28ea14",
-    "marketDownloads": 586121,
+    "marketDownloads": 586838,
     "version": "8.4.0"
   },
   "zcwl-multi-search-engine": {
     "verifiedAt": "2026-11-03",
     "author": "zcwl",
-    "marketDownloads": 10707114,
+    "marketDownloads": 10708937,
     "version": "3.0.0"
   },
   "indiv-ebandao-anti-fraud": {
     "verifiedAt": "2026-11-03",
     "author": "user_741dc82b",
-    "marketDownloads": 2032350,
+    "marketDownloads": 2032517,
     "version": "1.0.11"
   },
   "c1overzz-dsh-bili-scroll": {
     "verifiedAt": "2026-11-03",
-    "stars": 1154,
+    "stars": 1158,
     "license": "MIT",
     "author": "c1overzz",
     "repo": "c1overzz/dsh-bili-scroll",
@@ -127,21 +127,21 @@ window.DAFEIYU_STATS = {
   },
   "coqui-ai-tts": {
     "verifiedAt": "2026-11-03",
-    "stars": 46178,
+    "stars": 46180,
     "license": "MPL-2.0",
     "author": "coqui-ai",
     "repo": "coqui-ai/TTS"
   },
   "comfy-org-comfyui": {
     "verifiedAt": "2026-11-03",
-    "stars": 144684,
+    "stars": 144699,
     "license": "GPL-3.0",
     "author": "Comfy-Org",
     "repo": "Comfy-Org/ComfyUI"
   },
   "snowluma-snowluma": {
     "verifiedAt": "2026-11-03",
-    "stars": 3496,
+    "stars": 3509,
     "license": "NOASSERTION",
     "author": "SnowLuma",
     "repo": "SnowLuma/SnowLuma",
@@ -149,7 +149,7 @@ window.DAFEIYU_STATS = {
   },
   "derpyu520-qq-bridge": {
     "verifiedAt": "2026-11-03",
-    "stars": 3476,
+    "stars": 3481,
     "license": "NOASSERTION",
     "author": "Derpyu520",
     "repo": "Derpyu520/qq-bridge"
@@ -164,7 +164,7 @@ window.DAFEIYU_STATS = {
   },
   "kangarooking-cangjie-skill-cangjie-skill": {
     "verifiedAt": "2026-11-03",
-    "stars": 12012,
+    "stars": 12014,
     "license": "MIT",
     "author": "kangarooking",
     "skillInstalls": 1636,
@@ -172,39 +172,39 @@ window.DAFEIYU_STATS = {
   },
   "mattpocock-skills-teach": {
     "verifiedAt": "2026-11-03",
-    "stars": 310306,
+    "stars": 310384,
     "license": "MIT",
     "author": "mattpocock",
-    "skillInstalls": 904445,
+    "skillInstalls": 904703,
     "repo": "mattpocock/skills"
   },
   "mattpocock-skills-grill-me": {
     "verifiedAt": "2026-11-03",
-    "stars": 310306,
+    "stars": 310384,
     "license": "MIT",
     "author": "mattpocock",
-    "skillInstalls": 1483164,
+    "skillInstalls": 1483479,
     "repo": "mattpocock/skills"
   },
   "virgiliojr94-book-to-skill-book-to-skill": {
     "verifiedAt": "2026-11-03",
-    "stars": 36791,
+    "stars": 36799,
     "license": "MIT",
     "author": "virgiliojr94",
-    "skillInstalls": 8979,
+    "skillInstalls": 8983,
     "repo": "virgiliojr94/book-to-skill"
   },
   "vercel-labs-skills-find-skills": {
     "verifiedAt": "2026-11-03",
-    "stars": 37818,
+    "stars": 37830,
     "license": "MIT",
     "author": "vercel-labs",
-    "skillInstalls": 4174495,
+    "skillInstalls": 4175559,
     "repo": "vercel-labs/skills"
   },
   "bowenliang123-dsh-context": {
     "verifiedAt": "2026-11-03",
-    "stars": 4016,
+    "stars": 4019,
     "license": "Apache-2.0",
     "author": "bowenliang123",
     "repo": "bowenliang123/dsh-context",
@@ -213,7 +213,7 @@ window.DAFEIYU_STATS = {
   "clawhub-fty4-memos": {
     "verifiedAt": "2026-11-03",
     "author": "fty4",
-    "marketDownloads": 9788,
+    "marketDownloads": 9789,
     "version": "0.1.1"
   },
   "usememos-memos": {
@@ -225,7 +225,7 @@ window.DAFEIYU_STATS = {
   },
   "letta-ai-letta": {
     "verifiedAt": "2026-11-03",
-    "stars": 25322,
+    "stars": 25323,
     "license": "Apache-2.0",
     "author": "letta-ai",
     "repo": "letta-ai/letta",
@@ -233,7 +233,7 @@ window.DAFEIYU_STATS = {
   },
   "mem0ai-mem0": {
     "verifiedAt": "2026-11-03",
-    "stars": 68297,
+    "stars": 68304,
     "license": "Apache-2.0",
     "author": "mem0ai",
     "repo": "mem0ai/mem0",
@@ -241,7 +241,7 @@ window.DAFEIYU_STATS = {
   },
   "thedotmack-claude-mem": {
     "verifiedAt": "2026-11-03",
-    "stars": 110818,
+    "stars": 110922,
     "license": "Apache-2.0",
     "author": "thedotmack",
     "repo": "thedotmack/claude-mem",
@@ -249,7 +249,7 @@ window.DAFEIYU_STATS = {
   },
   "heygen-com-hyperframes": {
     "verifiedAt": "2026-11-03",
-    "stars": 77779,
+    "stars": 77824,
     "license": "Apache-2.0",
     "author": "heygen-com",
     "repo": "heygen-com/hyperframes",
@@ -257,7 +257,7 @@ window.DAFEIYU_STATS = {
   },
   "remotion-dev-remotion": {
     "verifiedAt": "2026-11-03",
-    "stars": 70127,
+    "stars": 70162,
     "license": "NOASSERTION",
     "author": "remotion-dev",
     "repo": "remotion-dev/remotion",
@@ -265,10 +265,10 @@ window.DAFEIYU_STATS = {
   },
   "vincentwei1021-video-shotcraft-video-shotcraft": {
     "verifiedAt": "2026-11-03",
-    "stars": 16203,
+    "stars": 16239,
     "license": "Apache-2.0",
     "author": "Vincentwei1021",
-    "skillInstalls": 6850,
+    "skillInstalls": 6861,
     "repo": "Vincentwei1021/video-shotcraft"
   },
   "vincentwei1021-anything2explainer-anything2explainer": {
@@ -276,42 +276,42 @@ window.DAFEIYU_STATS = {
     "stars": 2995,
     "license": "NOASSERTION",
     "author": "Vincentwei1021",
-    "skillInstalls": 196,
+    "skillInstalls": 198,
     "repo": "Vincentwei1021/anything2explainer"
   },
   "vincentwei1021-video-talkcraft-video-talkcraft": {
     "verifiedAt": "2026-11-03",
-    "stars": 2031,
+    "stars": 2035,
     "license": "NOASSERTION",
     "author": "Vincentwei1021",
-    "skillInstalls": 582,
+    "skillInstalls": 585,
     "repo": "Vincentwei1021/video-talkcraft"
   },
   "calesthio-openmontage": {
     "verifiedAt": "2026-11-03",
-    "stars": 75361,
+    "stars": 75420,
     "license": "AGPL-3.0",
     "author": "calesthio",
     "repo": "calesthio/OpenMontage"
   },
   "kingselyjoe-video-shotcraft-dsh": {
     "verifiedAt": "2026-11-03",
-    "stars": 117,
+    "stars": 118,
     "license": "Apache-2.0",
     "author": "kingselyjoe",
     "repo": "kingselyjoe/video-shotcraft-dsh"
   },
   "latent-spaces-brag-brag": {
     "verifiedAt": "2026-11-03",
-    "stars": 20073,
+    "stars": 20075,
     "license": "MIT",
     "author": "latent-spaces",
-    "skillInstalls": 22264,
+    "skillInstalls": 22276,
     "repo": "latent-spaces/brag"
   },
   "reactive-resume-reactive-resume": {
     "verifiedAt": "2026-11-03",
-    "stars": 45228,
+    "stars": 45230,
     "license": "MIT",
     "author": "reactive-resume",
     "repo": "reactive-resume/reactive-resume",
@@ -319,16 +319,16 @@ window.DAFEIYU_STATS = {
   },
   "tt-a1i-archify-archify": {
     "verifiedAt": "2026-11-03",
-    "stars": 92764,
+    "stars": 92809,
     "license": "Apache-2.0",
     "author": "tt-a1i",
-    "skillInstalls": 187035,
+    "skillInstalls": 187091,
     "repo": "tt-a1i/archify",
     "downloads": 41576
   },
   "dayuanjiang-next-ai-draw-io": {
     "verifiedAt": "2026-11-03",
-    "stars": 36598,
+    "stars": 36605,
     "license": "Apache-2.0",
     "author": "DayuanJiang",
     "repo": "DayuanJiang/next-ai-draw-io",
@@ -336,18 +336,28 @@ window.DAFEIYU_STATS = {
   },
   "freestylefly-awesome-gpt-image-2-gpt-image-2-style-library": {
     "verifiedAt": "2026-11-03",
-    "stars": 35390,
+    "stars": 35393,
     "license": "MIT",
     "author": "freestylefly",
-    "skillInstalls": 4103,
+    "skillInstalls": 4104,
     "repo": "freestylefly/awesome-gpt-image-2",
     "downloads": 316
   },
   "jimliu-baoyu-design": {
     "verifiedAt": "2026-11-03",
-    "stars": 5897,
+    "stars": 5909,
     "license": "NOASSERTION",
     "author": "JimLiu",
     "repo": "JimLiu/baoyu-design"
+  },
+  "deepseek-ai-dsh-superagent-prototype": {
+    "verifiedAt": "2026-11-03",
+    "stars": 14013,
+    "license": "MIT",
+    "author": "deepseek-ai",
+    "repo": "deepseek-ai/dsh-superagent-prototype"
+  },
+  "news-810598": {
+    "verifiedAt": "2026-11-03"
   }
 };

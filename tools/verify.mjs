@@ -18,7 +18,8 @@ const PORT = 9333;
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const ENTRIES = readDataFile(join(ROOT, "assets", "plugins.data.js")).arr;
 const N = ENTRIES.length;
-const IDS = ENTRIES.map((e) => "plugin-" + slugOf(e.url)).sort();
+// 卡片 id：条目可以用 id 字段自定义，否则从链接路径推导
+const IDS = ENTRIES.map((e) => "plugin-" + (e.id || slugOf(e.url))).sort();
 
 let msgId = 0;
 const pending = new Map();
@@ -257,7 +258,9 @@ async function main() {
       s.dispatchEvent(new Event('change', {bubbles:true}));
     `);
     await sleep(250);
-    check("最近收录第一条是最后加进来的", (await evaluate("return document.querySelector('#plugin-grid .product').id")) === `plugin-${slugOf(ENTRIES[ENTRIES.length - 1].url)}`);
+    const lastEntry = ENTRIES[ENTRIES.length - 1];
+    const lastId = "plugin-" + (lastEntry.id || slugOf(lastEntry.url));
+    check("最近收录第一条是最后加进来的", (await evaluate("return document.querySelector('#plugin-grid .product').id")) === lastId);
     await evaluate(`
       const s = document.querySelector('[data-sort]');
       s.value = 'catalog';

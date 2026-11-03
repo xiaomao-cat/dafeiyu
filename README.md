@@ -76,7 +76,7 @@ node tools/add-plugin.mjs \
 | `--warning "提示文字"` | 红色的特别提醒 |
 | `--features "一,二,三"` | 功能点，逗号分隔 |
 | `--extra "标签\|网址,标签\|网址"` | 额外的链接行 |
-| `--host dsh\|codex\|skillhub\|skills-sh\|skill-repo\|standalone` | 手动指定宿主（默认按网址推断） |
+| `--host dsh\|codex\|skillhub\|skills-sh\|skill-repo\|standalone\|article` | 手动指定宿主（默认按网址推断） |
 | `--kind command\|prompt\|link` | 安装方式：终端命令 / 粘给 Agent / 只给链接 |
 
 ### 方式 B：手写一条
@@ -106,9 +106,9 @@ node tools/add-plugin.mjs \
 
 | 自动推导的东西 | 规则 |
 |---|---|
-| 卡片 id | 从链接路径生成，如 `obra-superpowers` |
+| 卡片 id | 从链接路径生成，如 `obra-superpowers`；想自己起名就写 `id:` 字段 |
 | 包名 pkg | GitHub 给 `owner/repo`，技能市场给 `owner/slug`，npm 给包名 |
-| 宿主 host | `skillhub.cn` → 技能市场；`skills.sh` → skills.sh 目录；`npmjs.com` → npm 包；GitHub → 技能仓库 |
+| 宿主 host | `skillhub.cn` → 技能市场；`skills.sh` → skills.sh 目录；`npmjs.com` → npm 包；GitHub → 技能仓库；`rootdata.com` → 文章 |
 | 链接区 | 主链接自动生成，再拼上 `extra` |
 | 图标 | 按分类查 `assets/derive.js` 里的 `CATEGORY_ICON` |
 | 排序 | 数组里越靠前越靠前；最后一条自动带「最新」角标 |
@@ -120,6 +120,35 @@ node tools/sync-stats.mjs
 ```
 
 它会把结果写进 `assets/stats.js`，页面加载时自动盖在卡片上，同时同步 `index.html` 里的静态数字。
+
+### 文章类条目（长文、译文、设计文档）
+
+文章不是代码仓库，没有星数也没有安装命令，得手写几个字段：
+
+```js
+{
+  url: "https://www.rootdata.com/news/810598",  // 必填
+  id: "deepseek-superagent-article",            // 自定义卡片 id，slug 不好看时用
+  name: "Super-agent 设计探索（长文）",
+  tagline: "一句话说清它讲了什么",
+  category: "长文",                             // 分类名随便起，记得在 CATEGORY_ICON 加图标
+  installKind: "link",                         // link = 不出安装命令块
+  host: "article",                             // 宿主显示成「文章」
+  author: "Yujia Qiao",                        // 文章作者手写（URL 里推不出来）
+  note: "背景、结论、注意事项",
+  features: ["要点一", "要点二"],
+  extra: [
+    { label: "官方公众号原文", url: "https://mp.weixin.qq.com/s/..." }
+  ]
+}
+```
+
+要点：
+
+- **主链接的标签按链接本身的来源算**，不是按条目的宿主。`rootdata.com` 会被认成文章页，
+  标签显示「中文全文」；GitHub 链接才显示「源码仓库」。
+- 文章页推不出包名和作者，`pkg` 会留空、`author` 必须手写。
+- 写了 `id:` 字段后，`tools/verify.mjs` 的卡片 id 校验已经跟着改了，不用手动同步。
 
 ### 新分类要加图标
 
