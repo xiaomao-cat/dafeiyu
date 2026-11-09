@@ -132,7 +132,8 @@
     "视频": "ph-film-strip",
     "简历": "ph-file-text",
     "智能体": "ph-robot",
-    "长文": "ph-article"
+    "长文": "ph-article",
+    "工程": "ph-blueprint"
   };
   function iconFor(cat) {
     return CATEGORY_ICON[cat] || "ph-terminal-window";

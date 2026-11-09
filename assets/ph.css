@@ -37,6 +37,9 @@
 .ph-binoculars:before {
   content: "\ea64";
 }
+.ph-blueprint:before {
+  content: "\eda0";
+}
 .ph-brackets-curly:before {
   content: "\e860";
 }

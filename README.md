@@ -56,6 +56,15 @@ node tools/add-plugin.mjs \
 
 这类条目在数据里手写 `license:` 和 `opensource: false`，卡片会标成非开源并显示红色提示。
 
+**仓库压根没有 LICENSE 文件是另一种情况**，GitHub API 的 `license` 会返回 `null`（不是 NOASSERTION）：
+
+| 仓库 | 情况 |
+|---|---|
+| `pengxiaoan/autocad-dwg-redraw-skill` | 没有 LICENSE 文件，README 里也没有任何许可声明 |
+
+按 GitHub 惯例这等于**作者保留所有权利**，默认不允许复制、修改与再分发。
+数据里写 `license: "无许可证"` + `opensource: false`，并在 `warning` 里写清楚原因。
+
 **仓库 topics 里的 `dsh-plugin` 不可信**。核实过的几个：
 
 | 仓库 | DSH 集成 | 插件包 |
@@ -65,6 +74,14 @@ node tools/add-plugin.mjs \
 | `DayuanJiang/next-ai-draw-io` | 真有 | `@next-ai-drawio/dsh` |
 | `JimLiu/baoyu-design` | 真有 | `dsh-claude-slides` / `dsh-claude-design` / `dsh-claude-design-system` / `dsh-claude-dashboard` / `dsh-claude-motion` |
 | `freestylefly/awesome-gpt-image-2` | **没有** | — 仓库与 README 都无 DSH 集成，topics 是虚标 |
+| `earthtojake/text-to-cad` | **没有** | — 文件树里只有 `harness` 渲染器和 `handshake` 测试，同名干扰 |
+| `wzyn20051216/solidworks-automation-skill` | **没有** | — 文件树里只有 `golden_workflow_harness.py`，同名干扰 |
+| `cai-aa/cae-agent-hub` | **没有** | — 文件树与 README 都无 |
+| `pengxiaoan/autocad-dwg-redraw-skill` | **没有** | — 文件树与 README 都无 |
+| `czarnak/totally-integrated-claude` | **没有** | — 文件树与 README 都无 |
+
+> 查的时候别只 grep `harness`：`handshake`、`golden_workflow_harness` 这些同名词会误命中，
+> 得看清路径到底是 `dsh` / `deepseek` 开头的插件目录。
 
 查法：`gh api repos/<repo>/git/trees/main?recursive=1 --jq '[.tree[]|select(.type=="blob")|.path] | map(select(test("dsh|deepseek";"i")))'`
 
@@ -285,6 +302,19 @@ node tools/verify.mjs http://127.0.0.1:8899/index.html
 ```
 
 覆盖：数据渲染、搜索、分类与宿主筛选、排序、链接区、复制、FAQ、锚点跳转、Hero 速览跳转、复杂度体检、Cookie 条、无障碍、品牌素材、外链可达性、390px 窄屏菜单、图标渲染完整性。
+
+**期望值全部从数据文件动态算**，不写死具体项目：
+
+| 断言 | 期望值来自 |
+|---|---|
+| 卡片数量、卡片 id、宿主/分类筛选项 | `assets/plugins.data.js` |
+| 按 Star 排序的第一名 | `assets/stats.js` 里的最大星数 |
+| 按下载量排序的第一名 | `assets/stats.js` 里 `downloads + marketDownloads` 的最大值 |
+| 全站 Star / 安装 / 下载合计 | 页面上的统计条与卡片上的数字互相核对 |
+
+> 以前这两条排序断言写死了「第一名是 Superpowers」和「第一名是多引擎搜索」。
+> 星数天天涨，`mattpocock/skills` 一涨过 Superpowers 就误报失败，
+> 所以改成拿活数据算最大值 —— 断言的是「排序逻辑对不对」，不是「现在谁排第一」。
 
 ---
 

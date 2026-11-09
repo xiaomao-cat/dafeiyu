@@ -4,6 +4,7 @@
  *   node tools/verify.mjs [baseUrl]
  */
 import { spawn, execFileSync } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { setTimeout as sleep } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -20,6 +21,24 @@ const ENTRIES = readDataFile(join(ROOT, "assets", "plugins.data.js")).arr;
 const N = ENTRIES.length;
 // 卡片 id：条目可以用 id 字段自定义，否则从链接路径推导
 const IDS = ENTRIES.map((e) => "plugin-" + (e.id || slugOf(e.url))).sort();
+
+/* 活数据（星数、下载量）也会天天变，排序断言从这儿取期望值 */
+function readStatsFile(path) {
+  const src = readFileSync(path, "utf8");
+  const a = src.indexOf("window.DAFEIYU_STATS");
+  if (a < 0) throw new Error("stats 文件里找不到 window.DAFEIYU_STATS");
+  const b = src.indexOf("{", a);
+  let depth = 0, end = -1;
+  for (let i = b; i < src.length; i++) {
+    if (src[i] === "{") depth++;
+    else if (src[i] === "}") { depth--; if (depth === 0) { end = i; break; } }
+  }
+  if (end < 0) throw new Error("stats 文件的对象没闭合");
+  return new Function("return " + src.slice(b, end + 1))();
+}
+const STATS = readStatsFile(join(ROOT, "assets", "stats.js"));
+const MAX_STARS = Math.max(0, ...Object.values(STATS).map((v) => v.stars || 0));
+const MAX_DOWNLOADS = Math.max(0, ...Object.values(STATS).map((v) => (v.downloads || 0) + (v.marketDownloads || 0)));
 
 let msgId = 0;
 const pending = new Map();
@@ -244,14 +263,32 @@ async function main() {
       s.dispatchEvent(new Event('change', {bubbles:true}));
     `);
     await sleep(250);
-    check("按 Star 排序第一名是 Superpowers", (await evaluate("return document.querySelector('#plugin-grid .product').id")) === "plugin-obra-superpowers");
+    // 期望值从活数据算：星数会天天涨，写死某个项目迟早误报
+    const topStar = await evaluate(`
+      const c = document.querySelector('#plugin-grid .product');
+      if (!c) return -1;
+      const t = [...c.querySelectorAll('.tag')].find(x => /Star/.test(x.textContent));
+      const m = t && t.textContent.match(/([\\d,]+)\\s*Star/);
+      return m ? parseInt(m[1].replace(/,/g, ''), 10) : 0;
+    `);
+    check(`按 Star 排序第一名是星数最高的那个（${MAX_STARS.toLocaleString("en-US")}）`, topStar === MAX_STARS, `卡片显示 ${topStar}`);
     await evaluate(`
       const s = document.querySelector('[data-sort]');
       s.value = 'downloads';
       s.dispatchEvent(new Event('change', {bubbles:true}));
     `);
     await sleep(250);
-    check("按下载量排序第一名是多引擎搜索", (await evaluate("return document.querySelector('#plugin-grid .product').id")) === "plugin-zcwl-multi-search-engine");
+    const topDl = await evaluate(`
+      const c = document.querySelector('#plugin-grid .product');
+      if (!c) return -1;
+      const num = (re) => {
+        const t = [...c.querySelectorAll('.tag')].find(x => re.test(x.textContent));
+        const m = t && t.textContent.match(/([\\d,]+)\\s*次/);
+        return m ? parseInt(m[1].replace(/,/g, ''), 10) : 0;
+      };
+      return num(/次下载/) + num(/npm 近 30 天/);
+    `);
+    check(`按下载量排序第一名是下载量最高的那个（${MAX_DOWNLOADS.toLocaleString("en-US")}）`, topDl === MAX_DOWNLOADS, `卡片显示 ${topDl}`);
     await evaluate(`
       const s = document.querySelector('[data-sort]');
       s.value = 'newest';
